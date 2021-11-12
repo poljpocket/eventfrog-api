@@ -1,0 +1,28 @@
+{
+  "name": "eventfrog-api",
+  "author": "Julian Pollak <poljpocket@gmail.com>",
+  "version": "1.0.0",
+  "main": "src/EventFrog.js",
+  "dependencies": {
+    "jquery": "^3"
+  },
+  "devDependencies": {
+    "browserify": "latest",
+    "browserify-shim": "latest",
+    "npm-run-all": "^4",
+    "node-sass": "^5",
+    "autoprefixer": "^10",
+    "cssnano": "^5",
+    "postcss": "^8",
+    "postcss-cli": "^8",
+    "uglify-js": "^3"
+  },
+  "browserify-shim": {
+    "jquery": "global:jQuery"
+  },
+  "scripts": {
+    "js:jquery": "browserify -t [ browserify-shim ] src/jQuery.js -o dist/jquery.eventfrog.js",
+    "js:minify": "uglifyjs -o dist/jquery.eventfrog.min.js dist/jquery.eventfrog.js",
+    "build": "npm-run-all js:jquery js:minify"
+  }
+}
