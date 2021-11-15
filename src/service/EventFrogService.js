@@ -7,7 +7,7 @@ const $ = require('jquery');
 /**
  * @author Julian Pollak <poljpocket@gmail.com>
  */
-class EventFrogLoader {
+class EventFrogService {
     /**
      * @param {string} apiKey
      */
@@ -41,7 +41,7 @@ class EventFrogLoader {
      * @param {string|string[]} [options.zip] - PLZ, nur Events mit dieser/n PLZs werden gefunden
      * @param {float} [options.lat] - Latitude für Umkreissuche (nur zusammen mit lng und r verwendbar)
      * @param {float} [options.lng] - Longitude für Umkreissuche (nur zusammen mit lat und r verwendbar)
-     * @param {float} [options.r] - Gibt den Radius in km für die Umkreissuche an. (nur zusammen mit lng und r verwendbar)
+     * @param {float} [options.r] - Gibt den Radius in km für die Umkreissuche an. (nur zusammen mit lat und lng verwendbar)
      * @param {string} [options.from] - dd.MM.YYYY, nur Events die ab diesem Datum stattfinden sollen zurückgegeben werden
      * @param {string} [options.to] - dd.MM.YYYY, nur Events die bis zu diesem Datum stattfinden sollen zurückgegeben werden
      * @param {string} [options.modifiedSince] - dd.MM.YYYY[+HH:mm:ss], Es werden nur Events zurückgegeben die ab diesem Datum (MEZ) geändert wurden (angegebenes Datum inklusive).
@@ -102,7 +102,7 @@ class EventFrogLoader {
      * @param {string|string[]} [options.zip] - PLZ, nur Events mit dieser/n PLZs werden gefunden
      * @param {float} [options.lat] - Latitude für Umkreissuche (nur zusammen mit lng und r verwendbar)
      * @param {float} [options.lng] - Longitude für Umkreissuche (nur zusammen mit lat und r verwendbar)
-     * @param {float} [options.r] - Gibt den Radius in km für die Umkreissuche an. (nur zusammen mit lng und r verwendbar)
+     * @param {float} [options.r] - Gibt den Radius in km für die Umkreissuche an. (nur zusammen mit lat und lng verwendbar)
      * @param {string} [options.from] - dd.MM.YYYY, nur Events die ab diesem Datum stattfinden sollen zurückgegeben werden
      * @param {string} [options.to] - dd.MM.YYYY, nur Events die bis zu diesem Datum stattfinden sollen zurückgegeben werden
      * @param {string} [options.modifiedSince] - dd.MM.YYYY[+HH:mm:ss], Es werden nur Events zurückgegeben die ab diesem Datum (MEZ) geändert wurden (angegebenes Datum inklusive).
@@ -124,7 +124,7 @@ class EventFrogLoader {
      * @param {string|string[]} [options.id] - location-Ids
      * @param {float} [options.lat] - Latitude für Umkreissuche (nur zusammen mit lng und r verwendbar)
      * @param {float} [options.lng] - Longitude für Umkreissuche (nur zusammen mit lat und r verwendbar)
-     * @param {float} [options.r] - Gibt den Radius in km für die Umkreissuche an. (nur zusammen mit lng und r verwendbar)
+     * @param {float} [options.r] - Gibt den Radius in km für die Umkreissuche an. (nur zusammen mit lat und lng verwendbar)
      * @param {string|string[]} [options.zip] - PLZ, nur Events mit dieser/n PLZs werden gefunden
      * @param {string} [options.modifiedSince] - dd.MM.YYYY[+HH:mm:ss], Es werden nur Events zurückgegeben die ab diesem Datum (MEZ) geändert wurden (angegebenes Datum inklusive).
      * @param {int} [options.perPage] - default 100, gibt an, wieviele Events zurückgegeben werden sollen
@@ -152,7 +152,7 @@ class EventFrogLoader {
      * @param {string|string[]} [options.groupId] - eventgroup-Ids
      * @param {float} [options.lat] - Latitude für Umkreissuche (nur zusammen mit lng und r verwendbar)
      * @param {float} [options.lng] - Longitude für Umkreissuche (nur zusammen mit lat und r verwendbar)
-     * @param {float} [options.r] - Gibt den Radius in km für die Umkreissuche an. (nur zusammen mit lng und r verwendbar)
+     * @param {float} [options.r] - Gibt den Radius in km für die Umkreissuche an. (nur zusammen mit lat und lng verwendbar)
      * @param {string|string[]} [options.zip] - PLZ, nur Events mit dieser/n PLZs werden gefunden
      * @param {string} [options.modifiedSince] - dd.MM.YYYY[+HH:mm:ss], Es werden nur Events zurückgegeben die ab diesem Datum (MEZ) geändert wurden (angegebenes Datum inklusive).
      * @param {int} [options.perPage] - default 100, gibt an, wieviele Events zurückgegeben werden sollen
@@ -189,7 +189,7 @@ class EventFrogLoader {
         options.apiKey = this._key;
         return new Promise((resolve, reject) => {
             $.ajax({
-                url: EventFrogLoader._base + edge,
+                url: EventFrogService._base + edge,
                 method: 'GET',
                 data: options,
                 success: resolve,
@@ -200,6 +200,9 @@ class EventFrogLoader {
     }
 }
 
-EventFrogLoader._base = '//api.eventfrog.net/api/v1';
+/**
+ * @type {string}
+ */
+EventFrogService._base = '//api.eventfrog.net/api/v1';
 
-module.exports = EventFrogLoader;
+module.exports = EventFrogService;

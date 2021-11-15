@@ -1,4 +1,4 @@
-const EventFrogLoader = require('./loader/EventFrogLoader');
+const EventFrogService = require('./service/EventFrogService');
 
 const $ = require('jquery');
 
@@ -16,9 +16,9 @@ const $ = require('jquery');
  *   later be matched to events for more detailed display can easily overwhelm the EventFrog APIs. They handle this case
  *   correctly but this script does not!
  *   If you do not need groups and locations being matched to events, use the more granular methods of
- *   {@link EventFrogLoader}.
+ *   {@link EventFrogService}.
  *
- * @see EventFrogLoader.getEvents
+ * @see EventFrogService.getEvents
  *
  * @author Julian Pollak <poljpocket@gmail.com>
  *
@@ -51,7 +51,7 @@ module.exports = async function (customOptions) {
     if (options.page > 0) queryArgs = $.extend({page: options.page}, queryArgs);
     if (options.organization.length) queryArgs = $.extend({orgId: options.organization}, queryArgs);
 
-    const eventFrogLoader = new EventFrogLoader(options.apiKey);
+    const eventFrogLoader = new EventFrogService(options.apiKey);
 
     let events = await eventFrogLoader.loadEvents(queryArgs);
     if (options.perPage === 0 && options.amount > 0) {

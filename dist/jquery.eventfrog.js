@@ -1,6 +1,6 @@
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 (function (global){(function (){
-const EventFrogLoader = require('./loader/EventFrogLoader');
+const EventFrogService = require('./service/EventFrogService');
 
 const $ = (typeof window !== "undefined" ? window['jQuery'] : typeof global !== "undefined" ? global['jQuery'] : null);
 
@@ -18,9 +18,9 @@ const $ = (typeof window !== "undefined" ? window['jQuery'] : typeof global !== 
  *   later be matched to events for more detailed display can easily overwhelm the EventFrog APIs. They handle this case
  *   correctly but this script does not!
  *   If you do not need groups and locations being matched to events, use the more granular methods of
- *   {@link EventFrogLoader}.
+ *   {@link EventFrogService}.
  *
- * @see EventFrogLoader.getEvents
+ * @see EventFrogService.getEvents
  *
  * @author Julian Pollak <poljpocket@gmail.com>
  *
@@ -53,7 +53,7 @@ module.exports = async function (customOptions) {
     if (options.page > 0) queryArgs = $.extend({page: options.page}, queryArgs);
     if (options.organization.length) queryArgs = $.extend({orgId: options.organization}, queryArgs);
 
-    const eventFrogLoader = new EventFrogLoader(options.apiKey);
+    const eventFrogLoader = new EventFrogService(options.apiKey);
 
     let events = await eventFrogLoader.loadEvents(queryArgs);
     if (options.perPage === 0 && options.amount > 0) {
@@ -65,7 +65,7 @@ module.exports = async function (customOptions) {
 };
 
 }).call(this)}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./loader/EventFrogLoader":6}],2:[function(require,module,exports){
+},{"./service/EventFrogService":6}],2:[function(require,module,exports){
 const I18nUtils = require('../util/EventFrogUtil');
 
 /**
@@ -483,7 +483,7 @@ const $ = (typeof window !== "undefined" ? window['jQuery'] : typeof global !== 
 /**
  * @author Julian Pollak <poljpocket@gmail.com>
  */
-class EventFrogLoader {
+class EventFrogService {
     /**
      * @param {string} apiKey
      */
@@ -665,7 +665,7 @@ class EventFrogLoader {
         options.apiKey = this._key;
         return new Promise((resolve, reject) => {
             $.ajax({
-                url: EventFrogLoader._base + edge,
+                url: EventFrogService._base + edge,
                 method: 'GET',
                 data: options,
                 success: resolve,
@@ -676,9 +676,12 @@ class EventFrogLoader {
     }
 }
 
-EventFrogLoader._base = '//api.eventfrog.net/api/v1';
+/**
+ * @type {string}
+ */
+EventFrogService._base = '//api.eventfrog.net/api/v1';
 
-module.exports = EventFrogLoader;
+module.exports = EventFrogService;
 
 }).call(this)}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"../entity/EventFrogEvent.js":2,"../entity/EventFrogGroup.js":3,"../entity/EventFrogLocation.js":4}],7:[function(require,module,exports){

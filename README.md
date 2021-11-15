@@ -17,15 +17,11 @@ Basic implementation of the [Eventfrog](https://eventfrog.ch) Events API:
 
 * When not filtering events down to a small number, the amount of groups and locations being queried to later be matched
   to events for more detailed display can easily overwhelm the EventFrog APIs. They handle this case correctly but this
-  script does not!
-* If you do not need groups and locations being matched to events, use the more granular methods of EventFrogLoader.
+  script does not! If you do not need groups and locations being matched to events, use the more granular methods of `EventFrogService`.
 
 ## Usage
 
-> For the moment, for full usage, please refer to the `example` directory,
-> specifically its `example.js` file in the `src` subdirectory.
-
-#### Load the library
+### Load the library
 
 Simply load the bundled `jQuery` plugin:
 
@@ -39,9 +35,37 @@ You can also use `commonJS`:
 const loadEvents = require('./src/EventFrog');
 ```
 
-#### Load some events
+### Load some events
 
-This allows you to load events e.g. with:
+#### jQuery plugin
+
+Load `10` events from a specific organization using `async/await`:
+
+```js
+const events = await $.eventfrog({
+    apiKey: 'YOUR_API_KEY',
+    amount: 10,
+    organization: 'ORG_ID',
+});
+
+// do stuff
+```
+
+or using `Promise`s:
+
+```js
+$.eventfrog({
+    apiKey: 'YOUR_API_KEY',
+    amount: 10,
+    organization: 'ORG_ID',
+}).then((events) => {
+    // do stuff
+});
+```
+
+#### commonJS
+
+Load `10` events from a specific organization using `async/await`:
 
 ```js
 const events = await loadEvents({
@@ -52,7 +76,8 @@ const events = await loadEvents({
 
 // do stuff
 ```
-or, using Promises themselves:
+
+or using `Promise`s:
 
 ```js
 loadEvents({
@@ -64,7 +89,8 @@ loadEvents({
 });
 ```
 
-Other usage patterns exist. Please, refer to the source code for an extensive documentation of possibilities including API filter options.
+
+> Other usage patterns exist. Please, refer to `EventFrog` or `EventFrogLoader` classes for an extensive documentation of possibilities including API filter options.
 
 ## ToDo
 
