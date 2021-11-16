@@ -3,6 +3,8 @@ const EventFrogService = require('./service/EventFrogService');
 const $ = require('jquery');
 
 /**
+ * @deprecated v1.2.0
+ *
  * Loads an array of events by custom (more human-readable) options, maps locations and groups to events
  *
  * Known limitations:

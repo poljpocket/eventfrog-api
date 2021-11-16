@@ -1,8 +1,8 @@
 {
   "name": "eventfrog-api",
   "author": "Julian Pollak <poljpocket@gmail.com>",
-  "version": "1.1.0",
-  "main": "src/EventFrog.js",
+  "version": "1.2.0",
+  "main": "src/service/EventFrogService.js",
   "dependencies": {
     "jquery": "^3"
   },
