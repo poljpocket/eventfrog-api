@@ -11,6 +11,10 @@ const EventFrogService = require('./service/EventFrogService');
  */
 (function($) {
     /**
+     * @deprecated v1.2.0
+     *
+     * @see jQueryEventFrogService
+     *
      * @param opts
      * @param {string} [opts.apiKey] the EventFrog API key to use
      * @param {int} [opts.amount] the amount of events to load. This parameter is ignored when perPage and page are given.
@@ -33,7 +37,7 @@ const EventFrogService = require('./service/EventFrogService');
     }
 
     /**
-     * @deprecated
+     * @deprecated v1.1.0
      *
      * @param opts
      * @param {string} [opts.apiKey] the EventFrog API key to use
