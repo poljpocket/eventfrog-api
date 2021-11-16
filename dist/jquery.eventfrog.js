@@ -5,6 +5,8 @@ const EventFrogService = require('./service/EventFrogService');
 const $ = (typeof window !== "undefined" ? window['jQuery'] : typeof global !== "undefined" ? global['jQuery'] : null);
 
 /**
+ * @deprecated v1.2.0
+ *
  * Loads an array of events by custom (more human-readable) options, maps locations and groups to events
  *
  * Known limitations:

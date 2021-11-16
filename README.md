@@ -36,7 +36,7 @@ Simply load the bundled `jQuery` plugin:
 You can also use `commonJS`:
 
 ```js
-const EventFrogService = require('./src/EventFrogService');
+const EventFrogService = require('./src/service/EventFrogService');
 ```
 
 ### Load some events
