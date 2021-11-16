@@ -1,4 +1,5 @@
 const EventFrog = require('./EventFrog');
+const EventFrogService = require('./service/EventFrogService');
 
 /**
  * EventFrogLoader jQuery plugin
@@ -24,6 +25,14 @@ const EventFrog = require('./EventFrog');
     }
 
     /**
+     * @param {string} key
+     * @return {EventFrogService}
+     */
+    const jQueryEventFrogService = function(key) {
+        return new EventFrogService(key);
+    }
+
+    /**
      * @deprecated
      *
      * @param opts
@@ -43,6 +52,7 @@ const EventFrog = require('./EventFrog');
 
     $.extend({
         eventfrog: jQueryEventFrog,
+        eventfrogService: jQueryEventFrogService,
         efapi: jQueryEventFrogPromise
     });
 })(jQuery);
