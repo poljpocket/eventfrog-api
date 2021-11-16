@@ -1,4 +1,4 @@
-const I18nUtils = require('../util/EventFrogUtil');
+const EventFrogUtil = require('../util/EventFrogUtil');
 
 /**
  * @author Julian Pollak <poljpocket@gmail.com>
@@ -156,21 +156,21 @@ class EventFrogEvent {
      * @returns {string|null}
      */
     get title() {
-        return I18nUtils.getLocalizedString(this._title);
+        return EventFrogUtil.getLocalizedString(this._title);
     }
 
     /**
      * @returns {string|null}
      */
     get summary() {
-        return I18nUtils.getLocalizedString(this._summary);
+        return EventFrogUtil.getLocalizedString(this._summary);
     }
 
     /**
      * @returns {string|null}
      */
     get html() {
-        return I18nUtils.getLocalizedString(this._html);
+        return EventFrogUtil.getLocalizedString(this._html);
     }
 }
 
