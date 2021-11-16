@@ -65,8 +65,8 @@ module.exports = async function (customOptions) {
 };
 
 }).call(this)}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./service/EventFrogService":6}],2:[function(require,module,exports){
-const I18nUtils = require('../util/EventFrogUtil');
+},{"./service/EventFrogService":7}],2:[function(require,module,exports){
+const EventFrogUtil = require('../util/EventFrogUtil');
 
 /**
  * @author Julian Pollak <poljpocket@gmail.com>
@@ -117,7 +117,7 @@ class EventFrogEvent {
         this.groupId = data.groupId;
 
         /** @type {int} */
-        this.topic = data.rubricId;
+        this.topicId = data.rubricId;
 
         /**
          * @type {string[]}
@@ -218,27 +218,32 @@ class EventFrogEvent {
          * @type {EventFrogGroup|null}
          */
         this.group = null;
+
+        /**
+         * @type {EventFrogTopic|null}
+         */
+        this.topic = null;
     }
 
     /**
      * @returns {string|null}
      */
     get title() {
-        return I18nUtils.getLocalizedString(this._title);
+        return EventFrogUtil.getLocalizedString(this._title);
     }
 
     /**
      * @returns {string|null}
      */
     get summary() {
-        return I18nUtils.getLocalizedString(this._summary);
+        return EventFrogUtil.getLocalizedString(this._summary);
     }
 
     /**
      * @returns {string|null}
      */
     get html() {
-        return I18nUtils.getLocalizedString(this._html);
+        return EventFrogUtil.getLocalizedString(this._html);
     }
 }
 
@@ -249,8 +254,8 @@ EventFrogEvent.apiEdge = '/events.json';
 
 module.exports = EventFrogEvent;
 
-},{"../util/EventFrogUtil":7}],3:[function(require,module,exports){
-const I18nUtils = require("../util/EventFrogUtil");
+},{"../util/EventFrogUtil":8}],3:[function(require,module,exports){
+const EventFrogUtil = require("../util/EventFrogUtil");
 
 /**
  * @author Julian Pollak <poljpocket@gmail.com>
@@ -299,7 +304,7 @@ class EventFrogGroup {
      */
     get title() {
         // TODO the API does not work like the docs here
-        // return I18nUtils.getLocalizedString(this._title);
+        // return EventFrogUtil.getLocalizedString(this._title);
         return this._title;
     }
 
@@ -307,7 +312,7 @@ class EventFrogGroup {
      * @returns {string|null}
      */
     get html() {
-        return I18nUtils.getLocalizedString(this._html);
+        return EventFrogUtil.getLocalizedString(this._html);
     }
 }
 
@@ -318,8 +323,8 @@ EventFrogGroup.apiEdge = '/eventgroups.json';
 
 module.exports = EventFrogGroup;
 
-},{"../util/EventFrogUtil":7}],4:[function(require,module,exports){
-const I18nUtils = require('../util/EventFrogUtil');
+},{"../util/EventFrogUtil":8}],4:[function(require,module,exports){
+const EventFrogUtil = require('../util/EventFrogUtil');
 
 /**
  * @author Julian Pollak <poljpocket@gmail.com>
@@ -404,14 +409,14 @@ class EventFrogLocation {
      * @returns {string|null}
      */
     get title() {
-        return I18nUtils.getLocalizedString(this._title);
+        return EventFrogUtil.getLocalizedString(this._title);
     }
 
     /**
      * @returns {string|null}
      */
     get html() {
-        return I18nUtils.getLocalizedString(this._html);
+        return EventFrogUtil.getLocalizedString(this._html);
     }
 }
 
@@ -422,8 +427,57 @@ EventFrogLocation.apiEdge = '/locations.json';
 
 module.exports = EventFrogLocation;
 
-},{"../util/EventFrogUtil":7}],5:[function(require,module,exports){
+},{"../util/EventFrogUtil":8}],5:[function(require,module,exports){
+// const EventFrogUtil = require("../util/EventFrogUtil");
+
+/**
+ * @author Julian Pollak <poljpocket@gmail.com>
+ */
+class EventFrogTopic {
+    /**
+     * @param data
+     * @param {int} data.id
+     * @param {int} data.parentId - parent rubric id or 0 if no parent rubric exists
+     * @param {string} data.title - TODO this is wrong by API docs but actually, there is no array here
+     */
+    constructor(data) {
+        /** @type {int} */
+        this.id = data.id;
+
+        /** @type {int} */
+        this.parentId = data.parentId;
+
+        /**
+         * @type {string}
+         * @private
+         */
+        this._title = data.title;
+
+        /**
+         * @type {EventFrogTopic|null}
+         */
+        this.parent = null;
+    }
+
+    /**
+     * @returns {string|null}
+     */
+    get title() {
+        // return EventFrogUtil.getLocalizedString(this._title);
+        return this._title;
+    }
+}
+
+/**
+ * @type {string}
+ */
+EventFrogTopic.apiEdge = '/rubrics.json';
+
+module.exports = EventFrogTopic;
+
+},{}],6:[function(require,module,exports){
 const EventFrog = require('./EventFrog');
+const EventFrogService = require('./service/EventFrogService');
 
 /**
  * EventFrogLoader jQuery plugin
@@ -435,6 +489,10 @@ const EventFrog = require('./EventFrog');
  */
 (function($) {
     /**
+     * @deprecated v1.2.0
+     *
+     * @see jQueryEventFrogService
+     *
      * @param opts
      * @param {string} [opts.apiKey] the EventFrog API key to use
      * @param {int} [opts.amount] the amount of events to load. This parameter is ignored when perPage and page are given.
@@ -449,7 +507,15 @@ const EventFrog = require('./EventFrog');
     }
 
     /**
-     * @deprecated
+     * @param {string} key
+     * @return {EventFrogService}
+     */
+    const jQueryEventFrogService = function(key) {
+        return new EventFrogService(key);
+    }
+
+    /**
+     * @deprecated v1.1.0
      *
      * @param opts
      * @param {string} [opts.apiKey] the EventFrog API key to use
@@ -468,15 +534,17 @@ const EventFrog = require('./EventFrog');
 
     $.extend({
         eventfrog: jQueryEventFrog,
+        eventfrogService: jQueryEventFrogService,
         efapi: jQueryEventFrogPromise
     });
 })(jQuery);
 
-},{"./EventFrog":1}],6:[function(require,module,exports){
+},{"./EventFrog":1,"./service/EventFrogService":7}],7:[function(require,module,exports){
 (function (global){(function (){
-const EventFrogEvent = require('../entity/EventFrogEvent.js');
-const EventFrogGroup = require('../entity/EventFrogGroup.js');
-const EventFrogLocation = require('../entity/EventFrogLocation.js');
+const EventFrogEvent = require('../entity/EventFrogEvent');
+const EventFrogGroup = require('../entity/EventFrogGroup');
+const EventFrogLocation = require('../entity/EventFrogLocation');
+const EventFrogTopic = require('../entity/EventFrogTopic');
 
 const $ = (typeof window !== "undefined" ? window['jQuery'] : typeof global !== "undefined" ? global['jQuery'] : null);
 
@@ -517,7 +585,7 @@ class EventFrogService {
      * @param {string|string[]} [options.zip] - PLZ, nur Events mit dieser/n PLZs werden gefunden
      * @param {float} [options.lat] - Latitude für Umkreissuche (nur zusammen mit lng und r verwendbar)
      * @param {float} [options.lng] - Longitude für Umkreissuche (nur zusammen mit lat und r verwendbar)
-     * @param {float} [options.r] - Gibt den Radius in km für die Umkreissuche an. (nur zusammen mit lng und r verwendbar)
+     * @param {float} [options.r] - Gibt den Radius in km für die Umkreissuche an. (nur zusammen mit lat und lng verwendbar)
      * @param {string} [options.from] - dd.MM.YYYY, nur Events die ab diesem Datum stattfinden sollen zurückgegeben werden
      * @param {string} [options.to] - dd.MM.YYYY, nur Events die bis zu diesem Datum stattfinden sollen zurückgegeben werden
      * @param {string} [options.modifiedSince] - dd.MM.YYYY[+HH:mm:ss], Es werden nur Events zurückgegeben die ab diesem Datum (MEZ) geändert wurden (angegebenes Datum inklusive).
@@ -540,7 +608,7 @@ class EventFrogService {
      */
     async mapLocations(events) {
         const locationIds = new Set(events.map(e => e.locationId));
-        const locations = await this.getLocationsByIds([...locationIds]);
+        const locations = await this.getLocations({id: [...locationIds]});
         const locationMap = new Map(locations.map(i => [i.id, i]));
         events.forEach(event => {
             event.location = locationMap.get(event.locationId);
@@ -554,10 +622,26 @@ class EventFrogService {
      */
     async mapGroups(events) {
         const groupIds = new Set(events.map(e => e.groupId));
-        const groupData = await this.getGroupsByIds([...groupIds]);
+        const groupData = await this.getGroups({groupId: [...groupIds]});
         const groupMap = new Map(groupData.map(i => [i.id, i]));
         events.forEach(event => {
             event.group = groupMap.get(event.groupId);
+        });
+    }
+
+    /**
+     * Maps corresponding topics to events
+     * This first loads all topics and maps their parents accordingly
+     *
+     * @see loadTopics
+     *
+     * @param {EventFrogEvent[]} events - the list of events to modify
+     */
+    async mapTopics(events) {
+        const topics = await this.loadTopics();
+        const topicsMap = new Map(topics.map(i => [i.id, i]));
+        events.forEach(event => {
+            event.topic = topicsMap.get(event.topicId);
         });
     }
 
@@ -578,7 +662,7 @@ class EventFrogService {
      * @param {string|string[]} [options.zip] - PLZ, nur Events mit dieser/n PLZs werden gefunden
      * @param {float} [options.lat] - Latitude für Umkreissuche (nur zusammen mit lng und r verwendbar)
      * @param {float} [options.lng] - Longitude für Umkreissuche (nur zusammen mit lat und r verwendbar)
-     * @param {float} [options.r] - Gibt den Radius in km für die Umkreissuche an. (nur zusammen mit lng und r verwendbar)
+     * @param {float} [options.r] - Gibt den Radius in km für die Umkreissuche an. (nur zusammen mit lat und lng verwendbar)
      * @param {string} [options.from] - dd.MM.YYYY, nur Events die ab diesem Datum stattfinden sollen zurückgegeben werden
      * @param {string} [options.to] - dd.MM.YYYY, nur Events die bis zu diesem Datum stattfinden sollen zurückgegeben werden
      * @param {string} [options.modifiedSince] - dd.MM.YYYY[+HH:mm:ss], Es werden nur Events zurückgegeben die ab diesem Datum (MEZ) geändert wurden (angegebenes Datum inklusive).
@@ -600,7 +684,7 @@ class EventFrogService {
      * @param {string|string[]} [options.id] - location-Ids
      * @param {float} [options.lat] - Latitude für Umkreissuche (nur zusammen mit lng und r verwendbar)
      * @param {float} [options.lng] - Longitude für Umkreissuche (nur zusammen mit lat und r verwendbar)
-     * @param {float} [options.r] - Gibt den Radius in km für die Umkreissuche an. (nur zusammen mit lng und r verwendbar)
+     * @param {float} [options.r] - Gibt den Radius in km für die Umkreissuche an. (nur zusammen mit lat und lng verwendbar)
      * @param {string|string[]} [options.zip] - PLZ, nur Events mit dieser/n PLZs werden gefunden
      * @param {string} [options.modifiedSince] - dd.MM.YYYY[+HH:mm:ss], Es werden nur Events zurückgegeben die ab diesem Datum (MEZ) geändert wurden (angegebenes Datum inklusive).
      * @param {int} [options.perPage] - default 100, gibt an, wieviele Events zurückgegeben werden sollen
@@ -615,6 +699,8 @@ class EventFrogService {
     }
 
     /**
+     * @deprecated v1.2.0
+     *
      * @param {string|string[]} [ids] - location-Ids
      *
      * @return {Promise<EventFrogLocation[]>}
@@ -628,7 +714,7 @@ class EventFrogService {
      * @param {string|string[]} [options.groupId] - eventgroup-Ids
      * @param {float} [options.lat] - Latitude für Umkreissuche (nur zusammen mit lng und r verwendbar)
      * @param {float} [options.lng] - Longitude für Umkreissuche (nur zusammen mit lat und r verwendbar)
-     * @param {float} [options.r] - Gibt den Radius in km für die Umkreissuche an. (nur zusammen mit lng und r verwendbar)
+     * @param {float} [options.r] - Gibt den Radius in km für die Umkreissuche an. (nur zusammen mit lat und lng verwendbar)
      * @param {string|string[]} [options.zip] - PLZ, nur Events mit dieser/n PLZs werden gefunden
      * @param {string} [options.modifiedSince] - dd.MM.YYYY[+HH:mm:ss], Es werden nur Events zurückgegeben die ab diesem Datum (MEZ) geändert wurden (angegebenes Datum inklusive).
      * @param {int} [options.perPage] - default 100, gibt an, wieviele Events zurückgegeben werden sollen
@@ -643,12 +729,50 @@ class EventFrogService {
     }
 
     /**
+     * @deprecated v1.2.0
+     *
      * @param {string[]} ids - list of integers the ID(s) of groups to load
      *
      * @return {Promise<EventFrogGroup[]>}
      */
     async getGroupsByIds(ids) {
         return this.getGroups({groupId: ids});
+    }
+
+    /**
+     * Loads the list of topics
+     * EventFrogTopic parents are mapped to topics if applicable
+     *
+     * @see getTopics
+     * @see mapTopicParents
+     *
+     * @return {Promise<EventFrogTopic[]>}
+     */
+    async loadTopics() {
+        let topics = await this.getTopics();
+        this.mapTopicParents(topics);
+        return topics;
+    }
+
+    /**
+     * @return {Promise<EventFrogTopic[]>}
+     */
+    async getTopics() {
+        /** @type {{totalNumberOfResources: int, rubrics: Array}} */
+        const topicData = await this._get(EventFrogTopic.apiEdge, {});
+        return topicData.rubrics.map(i => new EventFrogTopic(i));
+    }
+
+    /**
+     * Maps corresponding parent topics to topics
+     *
+     * @param {EventFrogTopic[]} topics - the list of topics to modify
+     */
+    mapTopicParents(topics) {
+        const topicMap = new Map(topics.map(i => [i.id, i]));
+        topics.forEach(topic => {
+            topic.parent = topicMap.get(topic.parentId);
+        });
     }
 
     /**
@@ -684,7 +808,7 @@ EventFrogService._base = '//api.eventfrog.net/api/v1';
 module.exports = EventFrogService;
 
 }).call(this)}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../entity/EventFrogEvent.js":2,"../entity/EventFrogGroup.js":3,"../entity/EventFrogLocation.js":4}],7:[function(require,module,exports){
+},{"../entity/EventFrogEvent":2,"../entity/EventFrogGroup":3,"../entity/EventFrogLocation":4,"../entity/EventFrogTopic":5}],8:[function(require,module,exports){
 /**
  * @author Julian Pollak <poljpocket@gmail.com>
  */
@@ -710,4 +834,4 @@ class EventFrogUtil {
 
 module.exports = EventFrogUtil;
 
-},{}]},{},[5]);
+},{}]},{},[6]);

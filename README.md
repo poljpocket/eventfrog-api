@@ -1,6 +1,7 @@
 # Javascript implementation of the Eventfrog API
 
 Basic implementation of the [Eventfrog](https://eventfrog.ch) Events API:
+
 * Load events, filter them by various parameters
 * Filter events by group (see [Limitations](#known-limitations))
 * Location-based search for events as far as the API allows
@@ -11,28 +12,31 @@ Basic implementation of the [Eventfrog](https://eventfrog.ch) Events API:
 * You cannot filter by group and have pagination at the same time because EventFrog does not allow filtering by group ID
   at this time. This filter has to be applied after the events are loaded and thus paginated.
 * You cannot get all locations of an event (multiple are possible by the API). Only the first one is fetched.
-* The Rubrics part of the API is not yet implemented
 
 ### Known issues
 
 * When not filtering events down to a small number, the amount of groups and locations being queried to later be matched
   to events for more detailed display can easily overwhelm the EventFrog APIs. They handle this case correctly but this
-  script does not! If you do not need groups and locations being matched to events, use the more granular methods of `EventFrogService`.
+  script does not! If you do not need groups and locations being matched to events, use the more granular methods
+  of `EventFrogService`.
 
 ## Usage
+
+> The file `example.js` inside the `example` directory contains extensive usage examples.
 
 ### Load the library
 
 Simply load the bundled `jQuery` plugin:
 
 ```html
+
 <script src="dist/jquery.eventfrog.min.js"></script>
 ```
 
 You can also use `commonJS`:
 
 ```js
-const loadEvents = require('./src/EventFrog');
+const EventFrogService = require('./src/EventFrogService');
 ```
 
 ### Load some events
@@ -42,10 +46,10 @@ const loadEvents = require('./src/EventFrog');
 Load `10` events from a specific organization using `async/await`:
 
 ```js
-const events = await $.eventfrog({
-    apiKey: 'YOUR_API_KEY',
-    amount: 10,
-    organization: 'ORG_ID',
+const Service = $.eventfrogService('YOUR_API_KEY');
+const events = await Service.loadEvents({
+    perPage: 10,
+    orgId: 'ORG_ID',
 });
 
 // do stuff
@@ -54,10 +58,10 @@ const events = await $.eventfrog({
 or using `Promise`s:
 
 ```js
-$.eventfrog({
-    apiKey: 'YOUR_API_KEY',
-    amount: 10,
-    organization: 'ORG_ID',
+const Service = $.eventfrogService('YOUR_API_KEY');
+Service.loadEvents({
+    perPage: 10,
+    orgId: 'ORG_ID',
 }).then((events) => {
     // do stuff
 });
@@ -68,10 +72,10 @@ $.eventfrog({
 Load `10` events from a specific organization using `async/await`:
 
 ```js
-const events = await loadEvents({
-    apiKey: 'YOUR_API_KEY',
-    amount: 10,
-    organization: 'ORG_ID',
+const Service = new EventFrogService('YOUR_API_KEY');
+const events = await Service.loadEvents({
+    perPage: 10,
+    orgId: 'ORG_ID',
 });
 
 // do stuff
@@ -80,23 +84,22 @@ const events = await loadEvents({
 or using `Promise`s:
 
 ```js
-loadEvents({
-    apiKey: 'YOUR_API_KEY',
-    amount: 10,
-    organization: 'ORG_ID',
+const Service = new EventFrogService('YOUR_API_KEY');
+Service.loadEvents({
+    perPage: 10,
+    orgId: 'ORG_ID',
 }).then((events) => {
     // do stuff
 });
 ```
 
-
-> Other usage patterns exist. Please, refer to `EventFrog` or `EventFrogLoader` classes for an extensive documentation of possibilities including API filter options.
+> Other usage patterns exist. Please, refer to `EventFrogService` class for an extensive documentation of possibilities including API filter options.
 
 ## ToDo
 
 - [x] Document the whole API as-is
 - [ ] Allow multiple locations for a single event
-- [ ] Implement `Rubrics` part of the API
+- [x] Implement `Rubrics` part of the API
 
 ## Disclaimer
 
