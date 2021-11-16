@@ -65,7 +65,7 @@ class EventFrogService {
      */
     async mapLocations(events) {
         const locationIds = new Set(events.map(e => e.locationId));
-        const locations = await this.getLocationsByIds([...locationIds]);
+        const locations = await this.getLocations({id: [...locationIds]});
         const locationMap = new Map(locations.map(i => [i.id, i]));
         events.forEach(event => {
             event.location = locationMap.get(event.locationId);
@@ -79,7 +79,7 @@ class EventFrogService {
      */
     async mapGroups(events) {
         const groupIds = new Set(events.map(e => e.groupId));
-        const groupData = await this.getGroupsByIds([...groupIds]);
+        const groupData = await this.getGroups({groupId: [...groupIds]});
         const groupMap = new Map(groupData.map(i => [i.id, i]));
         events.forEach(event => {
             event.group = groupMap.get(event.groupId);
@@ -156,6 +156,8 @@ class EventFrogService {
     }
 
     /**
+     * @deprecated v1.2.0
+     *
      * @param {string|string[]} [ids] - location-Ids
      *
      * @return {Promise<EventFrogLocation[]>}
@@ -184,6 +186,8 @@ class EventFrogService {
     }
 
     /**
+     * @deprecated v1.2.0
+     *
      * @param {string[]} ids - list of integers the ID(s) of groups to load
      *
      * @return {Promise<EventFrogGroup[]>}
