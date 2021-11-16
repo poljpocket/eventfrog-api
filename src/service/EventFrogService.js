@@ -1,6 +1,7 @@
-const EventFrogEvent = require('../entity/EventFrogEvent.js');
-const EventFrogGroup = require('../entity/EventFrogGroup.js');
-const EventFrogLocation = require('../entity/EventFrogLocation.js');
+const EventFrogEvent = require('../entity/EventFrogEvent');
+const EventFrogGroup = require('../entity/EventFrogGroup');
+const EventFrogLocation = require('../entity/EventFrogLocation');
+const EventFrogTopic = require('../entity/EventFrogTopic');
 
 const $ = require('jquery');
 
@@ -82,6 +83,22 @@ class EventFrogService {
         const groupMap = new Map(groupData.map(i => [i.id, i]));
         events.forEach(event => {
             event.group = groupMap.get(event.groupId);
+        });
+    }
+
+    /**
+     * Maps corresponding topics to events
+     * This first loads all topics and maps their parents accordingly
+     *
+     * @see loadTopics
+     *
+     * @param {EventFrogEvent[]} events - the list of events to modify
+     */
+    async mapTopics(events) {
+        const topics = await this.loadTopics();
+        const topicsMap = new Map(topics.map(i => [i.id, i]));
+        events.forEach(event => {
+            event.topic = topicsMap.get(event.topicId);
         });
     }
 
@@ -173,6 +190,42 @@ class EventFrogService {
      */
     async getGroupsByIds(ids) {
         return this.getGroups({groupId: ids});
+    }
+
+    /**
+     * Loads the list of topics
+     * EventFrogTopic parents are mapped to topics if applicable
+     *
+     * @see getTopics
+     * @see mapTopicParents
+     *
+     * @return {Promise<EventFrogTopic[]>}
+     */
+    async loadTopics() {
+        let topics = await this.getTopics();
+        this.mapTopicParents(topics);
+        return topics;
+    }
+
+    /**
+     * @return {Promise<EventFrogTopic[]>}
+     */
+    async getTopics() {
+        /** @type {{totalNumberOfResources: int, rubrics: Array}} */
+        const topicData = await this._get(EventFrogTopic.apiEdge, {});
+        return topicData.rubrics.map(i => new EventFrogTopic(i));
+    }
+
+    /**
+     * Maps corresponding parent topics to topics
+     *
+     * @param {EventFrogTopic[]} topics - the list of topics to modify
+     */
+    mapTopicParents(topics) {
+        const topicMap = new Map(topics.map(i => [i.id, i]));
+        topics.forEach(topic => {
+            topic.parent = topicMap.get(topic.parentId);
+        });
     }
 
     /**

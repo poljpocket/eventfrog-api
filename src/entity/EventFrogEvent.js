@@ -49,7 +49,7 @@ class EventFrogEvent {
         this.groupId = data.groupId;
 
         /** @type {int} */
-        this.topic = data.rubricId;
+        this.topicId = data.rubricId;
 
         /**
          * @type {string[]}
@@ -150,6 +150,11 @@ class EventFrogEvent {
          * @type {EventFrogGroup|null}
          */
         this.group = null;
+
+        /**
+         * @type {EventFrogTopic|null}
+         */
+        this.topic = null;
     }
 
     /**
