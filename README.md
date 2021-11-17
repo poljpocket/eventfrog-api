@@ -20,6 +20,14 @@ Basic implementation of the [Eventfrog](https://eventfrog.ch) Events API:
   script does not! If you do not need groups and locations being matched to events, use the more granular methods
   of `EventFrogService`.
 
+## Installation
+
+The package is available on `npm`'s registry:
+
+```shell
+npm i eventfrog-api
+```
+
 ## Usage
 
 > The file `example.js` inside the `example` directory contains extensive usage examples.
