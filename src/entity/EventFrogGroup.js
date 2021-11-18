@@ -7,7 +7,7 @@ class EventFrogGroup {
     /**
      * @param data
      * @param {string} data.id
-     * @param {string} data.title - TODO this is wrong by API docs but actually, there is no array here
+     * @param {string} data.title - TODO #2 - this is wrong by API docs but actually, there is no array here
      * @param {string} data.url - on eventfrog.ch
      * @param {string[]} data.descriptionAsHTML - localized strings in array ('de', ...), unlimited max length, contains encoded HTML
      * @param {{url: string, width: int, height: int}[]} data.imgs - location images if available
@@ -46,7 +46,7 @@ class EventFrogGroup {
      * @returns {string|null}
      */
     get title() {
-        // TODO the API does not work like the docs here
+        // TODO #2 - the API does not work like the docs here
         // return EventFrogUtil.getLocalizedString(this._title);
         return this._title;
     }

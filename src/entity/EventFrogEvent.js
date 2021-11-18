@@ -120,7 +120,7 @@ class EventFrogEvent {
         /**
          * first location id
          *
-         * TODO extend api implementation to allow multiple locations
+         * TODO #1 - extend api implementation to allow multiple locations
          *
          * @type {string|null}
          */
