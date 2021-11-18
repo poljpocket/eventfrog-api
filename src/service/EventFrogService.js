@@ -2,8 +2,7 @@ const EventFrogEvent = require('../entity/EventFrogEvent');
 const EventFrogGroup = require('../entity/EventFrogGroup');
 const EventFrogLocation = require('../entity/EventFrogLocation');
 const EventFrogTopic = require('../entity/EventFrogTopic');
-
-const $ = require('jquery');
+const EventFrogUtil = require('../util/EventFrogUtil');
 
 /**
  * @author Julian Pollak <poljpocket@gmail.com>
@@ -240,20 +239,18 @@ class EventFrogService {
      * @param {string} edge - the API edge to use
      * @param options - the options to pass in the AJAX query
      *
-     * @return {Promise}
+     * @return {Promise<Object|string>}
      */
-    _get(edge, options) {
-        options.apiKey = this._key;
-        return new Promise((resolve, reject) => {
-            $.ajax({
-                url: EventFrogService._base + edge,
-                method: 'GET',
-                data: options,
-                success: resolve,
-                error: reject,
-                traditional: true,
-            });
+    async _get(edge, options) {
+        const params = EventFrogUtil.getSearchParams(options);
+        params.append('apiKey', this._key);
+        const url = `${EventFrogService._base}${edge}?${params.toString()}`;
+        const response = await fetch(url, {
+            method: 'GET',
         });
+        if (!response.ok) return Promise.reject('Request returned ' + response.status);
+        const data = await response.json();
+        return Promise.resolve(data);
     }
 }
 

@@ -13,7 +13,6 @@ const $ = (typeof window !== "undefined" ? window['jQuery'] : typeof global !== 
  * * You cannot filter by group and have pagination at the same time because EventFrog does not allow
  *   filtering by group ID at this time. This filter has to be applied after the events are loaded and thus paginated.
  * * You cannot get all locations of an event (multiple are possible by the API). Only the first one is fetched.
- * * The Rubrics part of the API is not yet implemented
  *
  * Known issues:
  * * When not filtering events down to a small number, the amount of groups and locations being queried to
@@ -542,13 +541,11 @@ const EventFrogService = require('./service/EventFrogService');
 })(jQuery);
 
 },{"./EventFrog":1,"./service/EventFrogService":7}],7:[function(require,module,exports){
-(function (global){(function (){
 const EventFrogEvent = require('../entity/EventFrogEvent');
 const EventFrogGroup = require('../entity/EventFrogGroup');
 const EventFrogLocation = require('../entity/EventFrogLocation');
 const EventFrogTopic = require('../entity/EventFrogTopic');
-
-const $ = (typeof window !== "undefined" ? window['jQuery'] : typeof global !== "undefined" ? global['jQuery'] : null);
+const EventFrogUtil = require('../util/EventFrogUtil');
 
 /**
  * @author Julian Pollak <poljpocket@gmail.com>
@@ -582,7 +579,7 @@ class EventFrogService {
      * @param {boolean} [options.excludeExtSrcIds] - Die bei extSourceId angegebenen externen Source-Ids sollen ausgeschlossen werden
      * @param {string|string[]} [options.locId] - locationIds
      * @param {string|string[]} [options.orgId] - organizerIds
-     * @param {string|string[]} [options.rubId] - rubricids
+     * @param {int|int[]} [options.rubId] - rubricids
      * @param {string|string[]} [options.extSrcId] - extSourceIds
      * @param {string|string[]} [options.zip] - PLZ, nur Events mit dieser/n PLZs werden gefunden
      * @param {float} [options.lat] - Latitude für Umkreissuche (nur zusammen mit lng und r verwendbar)
@@ -659,7 +656,7 @@ class EventFrogService {
      * @param {boolean} [options.excludeExtSrcIds] - Die bei extSourceId angegebenen externen Source-Ids sollen ausgeschlossen werden
      * @param {string|string[]} [options.locId] - locationIds
      * @param {string|string[]} [options.orgId] - organizerIds
-     * @param {string|string[]} [options.rubId] - rubricids
+     * @param {int|int[]} [options.rubId] - rubricids
      * @param {string|string[]} [options.extSrcId] - extSourceIds
      * @param {string|string[]} [options.zip] - PLZ, nur Events mit dieser/n PLZs werden gefunden
      * @param {float} [options.lat] - Latitude für Umkreissuche (nur zusammen mit lng und r verwendbar)
@@ -785,20 +782,18 @@ class EventFrogService {
      * @param {string} edge - the API edge to use
      * @param options - the options to pass in the AJAX query
      *
-     * @return {Promise}
+     * @return {Promise<Object|string>}
      */
-    _get(edge, options) {
-        options.apiKey = this._key;
-        return new Promise((resolve, reject) => {
-            $.ajax({
-                url: EventFrogService._base + edge,
-                method: 'GET',
-                data: options,
-                success: resolve,
-                error: reject,
-                traditional: true,
-            });
+    async _get(edge, options) {
+        const params = EventFrogUtil.getSearchParams(options);
+        params.append('apiKey', this._key);
+        const url = `${EventFrogService._base}${edge}?${params.toString()}`;
+        const response = await fetch(url, {
+            method: 'GET',
         });
+        if (!response.ok) return Promise.reject('Request returned ' + response.status);
+        const data = await response.json();
+        return Promise.resolve(data);
     }
 }
 
@@ -809,8 +804,7 @@ EventFrogService._base = '//api.eventfrog.net/api/v1';
 
 module.exports = EventFrogService;
 
-}).call(this)}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../entity/EventFrogEvent":2,"../entity/EventFrogGroup":3,"../entity/EventFrogLocation":4,"../entity/EventFrogTopic":5}],8:[function(require,module,exports){
+},{"../entity/EventFrogEvent":2,"../entity/EventFrogGroup":3,"../entity/EventFrogLocation":4,"../entity/EventFrogTopic":5,"../util/EventFrogUtil":8}],8:[function(require,module,exports){
 /**
  * @author Julian Pollak <poljpocket@gmail.com>
  */
@@ -831,6 +825,28 @@ class EventFrogUtil {
             return versions[Object.keys(versions)[0]];
         }
         return null;
+    }
+
+    /**
+     * Creates a URLSearchParams object which supports arrays in the options object
+     * The array values are appended without square brackets as the Eventfrog API expects them this way.
+     *
+     * @param {Object} options - the options to turn in
+     * @return {URLSearchParams}
+     */
+    static getSearchParams(options) {
+        const params = new URLSearchParams();
+        for (const key in options) {
+            const value = options[key];
+            if (Array.isArray(value)) { // is array
+                for (const i in value) {
+                    params.append(key, value[i]);
+                }
+            } else if (value !== Object(value)) { // is object
+                params.append(key, value);
+            }
+        }
+        return params;
     }
 }
 

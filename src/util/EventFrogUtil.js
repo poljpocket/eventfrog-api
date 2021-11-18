@@ -19,6 +19,28 @@ class EventFrogUtil {
         }
         return null;
     }
+
+    /**
+     * Creates a URLSearchParams object which supports arrays in the options object
+     * The array values are appended without square brackets as the Eventfrog API expects them this way.
+     *
+     * @param {Object} options - the options to turn in
+     * @return {URLSearchParams}
+     */
+    static getSearchParams(options) {
+        const params = new URLSearchParams();
+        for (const key in options) {
+            const value = options[key];
+            if (Array.isArray(value)) { // is array
+                for (const i in value) {
+                    params.append(key, value[i]);
+                }
+            } else if (value !== Object(value)) { // is object
+                params.append(key, value);
+            }
+        }
+        return params;
+    }
 }
 
 module.exports = EventFrogUtil;
