@@ -105,9 +105,7 @@ Service.loadEvents({
 
 ## ToDo
 
-- [x] Document the whole API as-is
-- [ ] Allow multiple locations for a single event
-- [x] Implement `Rubrics` part of the API
+See [Issues](https://github.com/poljpocket/eventfrog-api/issues).
 
 ## Disclaimer
 
