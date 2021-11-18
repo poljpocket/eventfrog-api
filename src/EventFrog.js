@@ -11,7 +11,6 @@ const $ = require('jquery');
  * * You cannot filter by group and have pagination at the same time because EventFrog does not allow
  *   filtering by group ID at this time. This filter has to be applied after the events are loaded and thus paginated.
  * * You cannot get all locations of an event (multiple are possible by the API). Only the first one is fetched.
- * * The Rubrics part of the API is not yet implemented
  *
  * Known issues:
  * * When not filtering events down to a small number, the amount of groups and locations being queried to

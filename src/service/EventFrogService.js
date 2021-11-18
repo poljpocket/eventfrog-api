@@ -37,7 +37,7 @@ class EventFrogService {
      * @param {boolean} [options.excludeExtSrcIds] - Die bei extSourceId angegebenen externen Source-Ids sollen ausgeschlossen werden
      * @param {string|string[]} [options.locId] - locationIds
      * @param {string|string[]} [options.orgId] - organizerIds
-     * @param {string|string[]} [options.rubId] - rubricids
+     * @param {int|int[]} [options.rubId] - rubricids
      * @param {string|string[]} [options.extSrcId] - extSourceIds
      * @param {string|string[]} [options.zip] - PLZ, nur Events mit dieser/n PLZs werden gefunden
      * @param {float} [options.lat] - Latitude für Umkreissuche (nur zusammen mit lng und r verwendbar)
@@ -114,7 +114,7 @@ class EventFrogService {
      * @param {boolean} [options.excludeExtSrcIds] - Die bei extSourceId angegebenen externen Source-Ids sollen ausgeschlossen werden
      * @param {string|string[]} [options.locId] - locationIds
      * @param {string|string[]} [options.orgId] - organizerIds
-     * @param {string|string[]} [options.rubId] - rubricids
+     * @param {int|int[]} [options.rubId] - rubricids
      * @param {string|string[]} [options.extSrcId] - extSourceIds
      * @param {string|string[]} [options.zip] - PLZ, nur Events mit dieser/n PLZs werden gefunden
      * @param {float} [options.lat] - Latitude für Umkreissuche (nur zusammen mit lng und r verwendbar)
