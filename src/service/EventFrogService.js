@@ -239,7 +239,7 @@ class EventFrogService {
      * @param {string} edge - the API edge to use
      * @param options - the options to pass in the AJAX query
      *
-     * @return {Promise<Object|string>}
+     * @return {Promise}
      */
     async _get(edge, options) {
         const params = EventFrogUtil.getSearchParams(options);

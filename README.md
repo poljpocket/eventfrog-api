@@ -10,7 +10,7 @@ Basic implementation of the [Eventfrog](https://eventfrog.ch) Events API:
 ### Known limitations
 
 * You cannot filter by group and have pagination at the same time because EventFrog does not allow filtering by group ID
-  at this time. This filter has to be applied after the events are loaded and thus paginated.
+  at this time. This filter has to be applied after the events are loaded and thus pagination would be filtered afterwards.
 * You cannot get all locations of an event (multiple are possible by the API). Only the first one is fetched.
 
 ### Known issues
@@ -44,7 +44,7 @@ Simply load the bundled `jQuery` plugin:
 You can also use `commonJS`:
 
 ```js
-const EventFrogService = require('./src/service/EventFrogService');
+const EventFrogService = require('eventfrog-api');
 ```
 
 ### Load some events
