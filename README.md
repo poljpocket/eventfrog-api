@@ -30,7 +30,7 @@ npm i eventfrog-api
 
 ## Usage
 
-> The file `example.js` inside the `example` directory contains extensive usage examples.
+> See [eventfrog-api-example](https://github.com/poljpocket/eventfrog-api-example) for an example implementation.
 
 ### Load the library
 
