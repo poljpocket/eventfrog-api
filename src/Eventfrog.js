@@ -1,4 +1,4 @@
-const EventFrogService = require('./service/EventFrogService');
+const EventfrogService = require('./service/EventfrogService');
 
 const $ = require('jquery');
 
@@ -8,23 +8,23 @@ const $ = require('jquery');
  * Loads an array of events by custom (more human-readable) options, maps locations and groups to events
  *
  * Known limitations:
- * * You cannot filter by group and have pagination at the same time because EventFrog does not allow
+ * * You cannot filter by group and have pagination at the same time because Eventfrog does not allow
  *   filtering by group ID at this time. This filter has to be applied after the events are loaded and thus paginated.
  * * You cannot get all locations of an event (multiple are possible by the API). Only the first one is fetched.
  *
  * Known issues:
  * * When not filtering events down to a small number, the amount of groups and locations being queried to
- *   later be matched to events for more detailed display can easily overwhelm the EventFrog APIs. They handle this case
+ *   later be matched to events for more detailed display can easily overwhelm the Eventfrog APIs. They handle this case
  *   correctly but this script does not!
  *   If you do not need groups and locations being matched to events, use the more granular methods of
- *   {@link EventFrogService}.
+ *   {@link EventfrogService}.
  *
- * @see EventFrogService.getEvents
+ * @see EventfrogService.getEvents
  *
  * @author Julian Pollak <poljpocket@gmail.com>
  *
  * @param customOptions
- * @param {string} [customOptions.apiKey] the EventFrog API key to use
+ * @param {string} [customOptions.apiKey] the Eventfrog API key to use
  * @param {int} [customOptions.amount] the amount of events to load. This parameter is ignored when perPage and page are given.
  * @param {int} [customOptions.perPage] the amount of events to load per page
  * @param {int} [customOptions.page] the page of events to load, paginated by perPage
@@ -32,7 +32,7 @@ const $ = require('jquery');
  * @param {string} [customOptions.group] the group ID to filter by. This only applies when no pagination is given.
  * @param {string} [customOptions.organization] the organization ID to filter by
  *
- * @return {Promise<EventFrogEvent[]>}
+ * @return {Promise<EventfrogEvent[]>}
  */
 module.exports = async function (customOptions) {
     let options = $.extend({
@@ -52,7 +52,7 @@ module.exports = async function (customOptions) {
     if (options.page > 0) queryArgs = $.extend({page: options.page}, queryArgs);
     if (options.organization.length) queryArgs = $.extend({orgId: options.organization}, queryArgs);
 
-    const eventFrogLoader = new EventFrogService(options.apiKey);
+    const eventFrogLoader = new EventfrogService(options.apiKey);
 
     let events = await eventFrogLoader.loadEvents(queryArgs);
     if (options.perPage === 0 && options.amount > 0) {

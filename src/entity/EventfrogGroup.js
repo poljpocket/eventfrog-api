@@ -1,9 +1,9 @@
-const EventFrogUtil = require("../util/EventFrogUtil");
+const EventfrogUtil = require("../util/EventfrogUtil");
 
 /**
  * @author Julian Pollak <poljpocket@gmail.com>
  */
-class EventFrogGroup {
+class EventfrogGroup {
     /**
      * @param data
      * @param {string} data.id
@@ -47,7 +47,7 @@ class EventFrogGroup {
      */
     get title() {
         // TODO #2 - the API does not work like the docs here
-        // return EventFrogUtil.getLocalizedString(this._title);
+        // return EventfrogUtil.getLocalizedString(this._title);
         return this._title;
     }
 
@@ -55,13 +55,13 @@ class EventFrogGroup {
      * @returns {string|null}
      */
     get html() {
-        return EventFrogUtil.getLocalizedString(this._html);
+        return EventfrogUtil.getLocalizedString(this._html);
     }
 }
 
 /**
  * @type {string}
  */
-EventFrogGroup.apiEdge = '/eventgroups.json';
+EventfrogGroup.apiEdge = '/eventgroups.json';
 
-module.exports = EventFrogGroup;
+module.exports = EventfrogGroup;

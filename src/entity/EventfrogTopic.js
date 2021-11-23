@@ -1,9 +1,9 @@
-// const EventFrogUtil = require("../util/EventFrogUtil");
+// const EventfrogUtil = require("../util/EventfrogUtil");
 
 /**
  * @author Julian Pollak <poljpocket@gmail.com>
  */
-class EventFrogTopic {
+class EventfrogTopic {
     /**
      * @param data
      * @param {int} data.id
@@ -24,7 +24,7 @@ class EventFrogTopic {
         this._title = data.title;
 
         /**
-         * @type {EventFrogTopic|null}
+         * @type {EventfrogTopic|null}
          */
         this.parent = null;
     }
@@ -34,7 +34,7 @@ class EventFrogTopic {
      */
     get title() {
         // TODO #2 - the API does not work like the docs here
-        // return EventFrogUtil.getLocalizedString(this._title);
+        // return EventfrogUtil.getLocalizedString(this._title);
         return this._title;
     }
 }
@@ -42,6 +42,6 @@ class EventFrogTopic {
 /**
  * @type {string}
  */
-EventFrogTopic.apiEdge = '/rubrics.json';
+EventfrogTopic.apiEdge = '/rubrics.json';
 
-module.exports = EventFrogTopic;
+module.exports = EventfrogTopic;

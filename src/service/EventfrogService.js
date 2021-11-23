@@ -1,13 +1,13 @@
-const EventFrogEvent = require('../entity/EventFrogEvent');
-const EventFrogGroup = require('../entity/EventFrogGroup');
-const EventFrogLocation = require('../entity/EventFrogLocation');
-const EventFrogTopic = require('../entity/EventFrogTopic');
-const EventFrogUtil = require('../util/EventFrogUtil');
+const EventfrogEvent = require('../entity/EventfrogEvent');
+const EventfrogGroup = require('../entity/EventfrogGroup');
+const EventfrogLocation = require('../entity/EventfrogLocation');
+const EventfrogTopic = require('../entity/EventfrogTopic');
+const EventfrogUtil = require('../util/EventfrogUtil');
 
 /**
  * @author Julian Pollak <poljpocket@gmail.com>
  */
-class EventFrogService {
+class EventfrogService {
     /**
      * @param {string} apiKey
      */
@@ -21,7 +21,7 @@ class EventFrogService {
 
     /**
      * Loads a list of events with given options
-     * EventFrogGroup and EventFrogLocation matches are searched for afterwards and matched to the events for more detailed display
+     * EventfrogGroup and EventfrogLocation matches are searched for afterwards and matched to the events for more detailed display
      *
      * @see getEvents
      * @see mapLocations
@@ -60,7 +60,7 @@ class EventFrogService {
     /**
      * Maps corresponding locations to events
      *
-     * @param {EventFrogEvent[]} events - the list of events to modify
+     * @param {EventfrogEvent[]} events - the list of events to modify
      */
     async mapLocations(events) {
         const locationIds = new Set(events.map(e => e.locationId));
@@ -74,7 +74,7 @@ class EventFrogService {
     /**
      * Maps corresponding groups to events
      *
-     * @param {EventFrogEvent[]} events - the list of events to modify
+     * @param {EventfrogEvent[]} events - the list of events to modify
      */
     async mapGroups(events) {
         const groupIds = new Set(events.map(e => e.groupId));
@@ -91,7 +91,7 @@ class EventFrogService {
      *
      * @see loadTopics
      *
-     * @param {EventFrogEvent[]} events - the list of events to modify
+     * @param {EventfrogEvent[]} events - the list of events to modify
      */
     async mapTopics(events) {
         const topics = await this.loadTopics();
@@ -127,12 +127,12 @@ class EventFrogService {
      * @param {boolean} [options.stream] - true = nur nach Live-Streamingevents suchen; false = nur nach Events suchen, die kein Live-Streaming haben
      * @param {boolean} [options.withOwnHiddens] - true = Es wird auch in den eigenen versteckten Events gesucht (Erfasser der Events = Besitzer des APIKeys)
      *
-     * @return {Promise<EventFrogEvent[]>}
+     * @return {Promise<EventfrogEvent[]>}
      */
     async getEvents(options) {
         /** @type {{totalNumberOfResources: int, events: Array}} */
-        const eventData = await this._get(EventFrogEvent.apiEdge, options);
-        return eventData.events.map(i => new EventFrogEvent(i));
+        const eventData = await this._get(EventfrogEvent.apiEdge, options);
+        return eventData.events.map(i => new EventfrogEvent(i));
     }
 
     /**
@@ -146,12 +146,12 @@ class EventFrogService {
      * @param {int} [options.perPage] - default 100, gibt an, wieviele Events zurückgegeben werden sollen
      * @param {int} [options.page] - Gibt an welche Seite der Resultate zurückgegeben werden soll (in Zusammenhang mit perPage)
      *
-     * @return {Promise<EventFrogLocation[]>}
+     * @return {Promise<EventfrogLocation[]>}
      */
     async getLocations(options) {
         /** @type {{totalNumberOfResources: int, locations: Array}} */
-        const locationsData = await this._get(EventFrogLocation.apiEdge, options);
-        return locationsData.locations.map(element => new EventFrogLocation(element));
+        const locationsData = await this._get(EventfrogLocation.apiEdge, options);
+        return locationsData.locations.map(element => new EventfrogLocation(element));
     }
 
     /**
@@ -159,7 +159,7 @@ class EventFrogService {
      *
      * @param {string|string[]} [ids] - location-Ids
      *
-     * @return {Promise<EventFrogLocation[]>}
+     * @return {Promise<EventfrogLocation[]>}
      */
     async getLocationsByIds(ids) {
         return this.getLocations({id: ids});
@@ -176,12 +176,12 @@ class EventFrogService {
      * @param {int} [options.perPage] - default 100, gibt an, wieviele Events zurückgegeben werden sollen
      * @param {int} [options.page] - Gibt an welche Seite der Resultate zurückgegeben werden soll (in Zusammenhang mit perPage)
      *
-     * @return {Promise<EventFrogGroup[]>}
+     * @return {Promise<EventfrogGroup[]>}
      */
     async getGroups(options) {
         /** @type {{totalNumberOfResources: int, eventgroups: Array}} */
-        const groupData = await this._get(EventFrogGroup.apiEdge, options);
-        return groupData.eventgroups.map(i => new EventFrogGroup(i));
+        const groupData = await this._get(EventfrogGroup.apiEdge, options);
+        return groupData.eventgroups.map(i => new EventfrogGroup(i));
     }
 
     /**
@@ -189,7 +189,7 @@ class EventFrogService {
      *
      * @param {string[]} ids - list of integers the ID(s) of groups to load
      *
-     * @return {Promise<EventFrogGroup[]>}
+     * @return {Promise<EventfrogGroup[]>}
      */
     async getGroupsByIds(ids) {
         return this.getGroups({groupId: ids});
@@ -197,12 +197,12 @@ class EventFrogService {
 
     /**
      * Loads the list of topics
-     * EventFrogTopic parents are mapped to topics if applicable
+     * EventfrogTopic parents are mapped to topics if applicable
      *
      * @see getTopics
      * @see mapTopicParents
      *
-     * @return {Promise<EventFrogTopic[]>}
+     * @return {Promise<EventfrogTopic[]>}
      */
     async loadTopics() {
         let topics = await this.getTopics();
@@ -211,18 +211,18 @@ class EventFrogService {
     }
 
     /**
-     * @return {Promise<EventFrogTopic[]>}
+     * @return {Promise<EventfrogTopic[]>}
      */
     async getTopics() {
         /** @type {{totalNumberOfResources: int, rubrics: Array}} */
-        const topicData = await this._get(EventFrogTopic.apiEdge, {});
-        return topicData.rubrics.map(i => new EventFrogTopic(i));
+        const topicData = await this._get(EventfrogTopic.apiEdge, {});
+        return topicData.rubrics.map(i => new EventfrogTopic(i));
     }
 
     /**
      * Maps corresponding parent topics to topics
      *
-     * @param {EventFrogTopic[]} topics - the list of topics to modify
+     * @param {EventfrogTopic[]} topics - the list of topics to modify
      */
     mapTopicParents(topics) {
         const topicMap = new Map(topics.map(i => [i.id, i]));
@@ -242,9 +242,9 @@ class EventFrogService {
      * @return {Promise}
      */
     async _get(edge, options) {
-        const params = EventFrogUtil.getSearchParams(options);
+        const params = EventfrogUtil.getSearchParams(options);
         params.append('apiKey', this._key);
-        const url = `${EventFrogService._base}${edge}?${params.toString()}`;
+        const url = `${EventfrogService._base}${edge}?${params.toString()}`;
         const response = await fetch(url, {
             method: 'GET',
         });
@@ -257,6 +257,6 @@ class EventFrogService {
 /**
  * @type {string}
  */
-EventFrogService._base = '//api.eventfrog.net/api/v1';
+EventfrogService._base = '//api.eventfrog.net/api/v1';
 
-module.exports = EventFrogService;
+module.exports = EventfrogService;

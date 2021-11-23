@@ -1,9 +1,9 @@
-const EventFrogUtil = require('../util/EventFrogUtil');
+const EventfrogUtil = require('../util/EventfrogUtil');
 
 /**
  * @author Julian Pollak <poljpocket@gmail.com>
  */
-class EventFrogEvent {
+class EventfrogEvent {
     /**
      * @param data
      * @param {string} data.id
@@ -142,17 +142,17 @@ class EventFrogEvent {
         this._html = data.descriptionAsHTML;
 
         /**
-         * @type {EventFrogLocation|null}
+         * @type {EventfrogLocation|null}
          */
         this.location = null;
 
         /**
-         * @type {EventFrogGroup|null}
+         * @type {EventfrogGroup|null}
          */
         this.group = null;
 
         /**
-         * @type {EventFrogTopic|null}
+         * @type {EventfrogTopic|null}
          */
         this.topic = null;
     }
@@ -161,27 +161,27 @@ class EventFrogEvent {
      * @returns {string|null}
      */
     get title() {
-        return EventFrogUtil.getLocalizedString(this._title);
+        return EventfrogUtil.getLocalizedString(this._title);
     }
 
     /**
      * @returns {string|null}
      */
     get summary() {
-        return EventFrogUtil.getLocalizedString(this._summary);
+        return EventfrogUtil.getLocalizedString(this._summary);
     }
 
     /**
      * @returns {string|null}
      */
     get html() {
-        return EventFrogUtil.getLocalizedString(this._html);
+        return EventfrogUtil.getLocalizedString(this._html);
     }
 }
 
 /**
  * @type {string}
  */
-EventFrogEvent.apiEdge = '/events.json';
+EventfrogEvent.apiEdge = '/events.json';
 
-module.exports = EventFrogEvent;
+module.exports = EventfrogEvent;

@@ -1,6 +1,6 @@
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 (function (global){(function (){
-const EventFrogService = require('./service/EventFrogService');
+const EventfrogService = require('./service/EventfrogService');
 
 const $ = (typeof window !== "undefined" ? window['jQuery'] : typeof global !== "undefined" ? global['jQuery'] : null);
 
@@ -10,23 +10,23 @@ const $ = (typeof window !== "undefined" ? window['jQuery'] : typeof global !== 
  * Loads an array of events by custom (more human-readable) options, maps locations and groups to events
  *
  * Known limitations:
- * * You cannot filter by group and have pagination at the same time because EventFrog does not allow
+ * * You cannot filter by group and have pagination at the same time because Eventfrog does not allow
  *   filtering by group ID at this time. This filter has to be applied after the events are loaded and thus paginated.
  * * You cannot get all locations of an event (multiple are possible by the API). Only the first one is fetched.
  *
  * Known issues:
  * * When not filtering events down to a small number, the amount of groups and locations being queried to
- *   later be matched to events for more detailed display can easily overwhelm the EventFrog APIs. They handle this case
+ *   later be matched to events for more detailed display can easily overwhelm the Eventfrog APIs. They handle this case
  *   correctly but this script does not!
  *   If you do not need groups and locations being matched to events, use the more granular methods of
- *   {@link EventFrogService}.
+ *   {@link EventfrogService}.
  *
- * @see EventFrogService.getEvents
+ * @see EventfrogService.getEvents
  *
  * @author Julian Pollak <poljpocket@gmail.com>
  *
  * @param customOptions
- * @param {string} [customOptions.apiKey] the EventFrog API key to use
+ * @param {string} [customOptions.apiKey] the Eventfrog API key to use
  * @param {int} [customOptions.amount] the amount of events to load. This parameter is ignored when perPage and page are given.
  * @param {int} [customOptions.perPage] the amount of events to load per page
  * @param {int} [customOptions.page] the page of events to load, paginated by perPage
@@ -34,7 +34,7 @@ const $ = (typeof window !== "undefined" ? window['jQuery'] : typeof global !== 
  * @param {string} [customOptions.group] the group ID to filter by. This only applies when no pagination is given.
  * @param {string} [customOptions.organization] the organization ID to filter by
  *
- * @return {Promise<EventFrogEvent[]>}
+ * @return {Promise<EventfrogEvent[]>}
  */
 module.exports = async function (customOptions) {
     let options = $.extend({
@@ -54,7 +54,7 @@ module.exports = async function (customOptions) {
     if (options.page > 0) queryArgs = $.extend({page: options.page}, queryArgs);
     if (options.organization.length) queryArgs = $.extend({orgId: options.organization}, queryArgs);
 
-    const eventFrogLoader = new EventFrogService(options.apiKey);
+    const eventFrogLoader = new EventfrogService(options.apiKey);
 
     let events = await eventFrogLoader.loadEvents(queryArgs);
     if (options.perPage === 0 && options.amount > 0) {
@@ -66,13 +66,13 @@ module.exports = async function (customOptions) {
 };
 
 }).call(this)}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./service/EventFrogService":7}],2:[function(require,module,exports){
-const EventFrogUtil = require('../util/EventFrogUtil');
+},{"./service/EventfrogService":7}],2:[function(require,module,exports){
+const EventfrogUtil = require('../util/EventfrogUtil');
 
 /**
  * @author Julian Pollak <poljpocket@gmail.com>
  */
-class EventFrogEvent {
+class EventfrogEvent {
     /**
      * @param data
      * @param {string} data.id
@@ -189,7 +189,7 @@ class EventFrogEvent {
         /**
          * first location id
          *
-         * TODO extend api implementation to allow multiple locations
+         * TODO #1 - extend api implementation to allow multiple locations
          *
          * @type {string|null}
          */
@@ -211,17 +211,17 @@ class EventFrogEvent {
         this._html = data.descriptionAsHTML;
 
         /**
-         * @type {EventFrogLocation|null}
+         * @type {EventfrogLocation|null}
          */
         this.location = null;
 
         /**
-         * @type {EventFrogGroup|null}
+         * @type {EventfrogGroup|null}
          */
         this.group = null;
 
         /**
-         * @type {EventFrogTopic|null}
+         * @type {EventfrogTopic|null}
          */
         this.topic = null;
     }
@@ -230,42 +230,42 @@ class EventFrogEvent {
      * @returns {string|null}
      */
     get title() {
-        return EventFrogUtil.getLocalizedString(this._title);
+        return EventfrogUtil.getLocalizedString(this._title);
     }
 
     /**
      * @returns {string|null}
      */
     get summary() {
-        return EventFrogUtil.getLocalizedString(this._summary);
+        return EventfrogUtil.getLocalizedString(this._summary);
     }
 
     /**
      * @returns {string|null}
      */
     get html() {
-        return EventFrogUtil.getLocalizedString(this._html);
+        return EventfrogUtil.getLocalizedString(this._html);
     }
 }
 
 /**
  * @type {string}
  */
-EventFrogEvent.apiEdge = '/events.json';
+EventfrogEvent.apiEdge = '/events.json';
 
-module.exports = EventFrogEvent;
+module.exports = EventfrogEvent;
 
-},{"../util/EventFrogUtil":8}],3:[function(require,module,exports){
-const EventFrogUtil = require("../util/EventFrogUtil");
+},{"../util/EventfrogUtil":8}],3:[function(require,module,exports){
+const EventfrogUtil = require("../util/EventfrogUtil");
 
 /**
  * @author Julian Pollak <poljpocket@gmail.com>
  */
-class EventFrogGroup {
+class EventfrogGroup {
     /**
      * @param data
      * @param {string} data.id
-     * @param {string} data.title - TODO this is wrong by API docs but actually, there is no array here
+     * @param {string} data.title - TODO #2 - this is wrong by API docs but actually, there is no array here
      * @param {string} data.url - on eventfrog.ch
      * @param {string[]} data.descriptionAsHTML - localized strings in array ('de', ...), unlimited max length, contains encoded HTML
      * @param {{url: string, width: int, height: int}[]} data.imgs - location images if available
@@ -304,8 +304,8 @@ class EventFrogGroup {
      * @returns {string|null}
      */
     get title() {
-        // TODO the API does not work like the docs here
-        // return EventFrogUtil.getLocalizedString(this._title);
+        // TODO #2 - the API does not work like the docs here
+        // return EventfrogUtil.getLocalizedString(this._title);
         return this._title;
     }
 
@@ -313,24 +313,24 @@ class EventFrogGroup {
      * @returns {string|null}
      */
     get html() {
-        return EventFrogUtil.getLocalizedString(this._html);
+        return EventfrogUtil.getLocalizedString(this._html);
     }
 }
 
 /**
  * @type {string}
  */
-EventFrogGroup.apiEdge = '/eventgroups.json';
+EventfrogGroup.apiEdge = '/eventgroups.json';
 
-module.exports = EventFrogGroup;
+module.exports = EventfrogGroup;
 
-},{"../util/EventFrogUtil":8}],4:[function(require,module,exports){
-const EventFrogUtil = require('../util/EventFrogUtil');
+},{"../util/EventfrogUtil":8}],4:[function(require,module,exports){
+const EventfrogUtil = require('../util/EventfrogUtil');
 
 /**
  * @author Julian Pollak <poljpocket@gmail.com>
  */
-class EventFrogLocation {
+class EventfrogLocation {
     /**
      * @param data
      * @param {string} data.id
@@ -410,36 +410,36 @@ class EventFrogLocation {
      * @returns {string|null}
      */
     get title() {
-        return EventFrogUtil.getLocalizedString(this._title);
+        return EventfrogUtil.getLocalizedString(this._title);
     }
 
     /**
      * @returns {string|null}
      */
     get html() {
-        return EventFrogUtil.getLocalizedString(this._html);
+        return EventfrogUtil.getLocalizedString(this._html);
     }
 }
 
 /**
  * @type {string}
  */
-EventFrogLocation.apiEdge = '/locations.json';
+EventfrogLocation.apiEdge = '/locations.json';
 
-module.exports = EventFrogLocation;
+module.exports = EventfrogLocation;
 
-},{"../util/EventFrogUtil":8}],5:[function(require,module,exports){
-// const EventFrogUtil = require("../util/EventFrogUtil");
+},{"../util/EventfrogUtil":8}],5:[function(require,module,exports){
+// const EventfrogUtil = require("../util/EventfrogUtil");
 
 /**
  * @author Julian Pollak <poljpocket@gmail.com>
  */
-class EventFrogTopic {
+class EventfrogTopic {
     /**
      * @param data
      * @param {int} data.id
      * @param {int} data.parentId - parent rubric id or 0 if no parent rubric exists
-     * @param {string} data.title - TODO this is wrong by API docs but actually, there is no array here
+     * @param {string} data.title - TODO #2 - this is wrong by API docs but actually, there is no array here
      */
     constructor(data) {
         /** @type {int} */
@@ -455,7 +455,7 @@ class EventFrogTopic {
         this._title = data.title;
 
         /**
-         * @type {EventFrogTopic|null}
+         * @type {EventfrogTopic|null}
          */
         this.parent = null;
     }
@@ -464,7 +464,8 @@ class EventFrogTopic {
      * @returns {string|null}
      */
     get title() {
-        // return EventFrogUtil.getLocalizedString(this._title);
+        // TODO #2 - the API does not work like the docs here
+        // return EventfrogUtil.getLocalizedString(this._title);
         return this._title;
     }
 }
@@ -472,18 +473,18 @@ class EventFrogTopic {
 /**
  * @type {string}
  */
-EventFrogTopic.apiEdge = '/rubrics.json';
+EventfrogTopic.apiEdge = '/rubrics.json';
 
-module.exports = EventFrogTopic;
+module.exports = EventfrogTopic;
 
 },{}],6:[function(require,module,exports){
-const EventFrog = require('./EventFrog');
-const EventFrogService = require('./service/EventFrogService');
+const Eventfrog = require('./Eventfrog');
+const EventfrogService = require('./service/EventfrogService');
 
 /**
- * EventFrogLoader jQuery plugin
+ * EventfrogLoader jQuery plugin
  *
- * @see EventFrogLoader
+ * @see EventfrogService
  *
  * @author Julian Pollak <poljpocket@gmail.com>
  *
@@ -492,10 +493,10 @@ const EventFrogService = require('./service/EventFrogService');
     /**
      * @deprecated v1.2.0
      *
-     * @see jQueryEventFrogService
+     * @see jQueryEventfrogService
      *
      * @param opts
-     * @param {string} [opts.apiKey] the EventFrog API key to use
+     * @param {string} [opts.apiKey] the Eventfrog API key to use
      * @param {int} [opts.amount] the amount of events to load. This parameter is ignored when perPage and page are given.
      * @param {int} [opts.perPage] the amount of events to load per page. page
      * @param {int} [opts.page] the page of events to load, paginated by perPage
@@ -503,54 +504,54 @@ const EventFrogService = require('./service/EventFrogService');
      * @param {string} [opts.group] the group ID to filter by. This only applies when no pagination is given.
      * @param {string} [opts.organization] the organization ID to filter by
      */
-    const jQueryEventFrog = async function(opts) {
-        return EventFrog(opts);
+    const jQueryEventfrog = async function(opts) {
+        return Eventfrog(opts);
     }
 
     /**
      * @param {string} key
-     * @return {EventFrogService}
+     * @return {EventfrogService}
      */
-    const jQueryEventFrogService = function(key) {
-        return new EventFrogService(key);
+    const jQueryEventfrogService = function(key) {
+        return new EventfrogService(key);
     }
 
     /**
      * @deprecated v1.1.0
      *
      * @param opts
-     * @param {string} [opts.apiKey] the EventFrog API key to use
+     * @param {string} [opts.apiKey] the Eventfrog API key to use
      * @param {int} [opts.amount] the amount of events to load. This parameter is ignored when perPage and page are given.
      * @param {int} [opts.perPage] the amount of events to load per page. page
      * @param {int} [opts.page] the page of events to load, paginated by perPage
      * @param {string} [opts.search] the string to search by
      * @param {string} [opts.group] the group ID to filter by. This only applies when no pagination is given.
      * @param {string} [opts.organization] the organization ID to filter by
-     * @param {function(EventFrogEvent[])} success
+     * @param {function(EventfrogEvent[])} success
      * @param {function(string)} [error]
      */
-    const jQueryEventFrogPromise = function(opts, success, error) {
-        jQueryEventFrog(opts).then(success).catch(error);
+    const jQueryEventfrogPromise = function(opts, success, error) {
+        jQueryEventfrog(opts).then(success).catch(error);
     }
 
     $.extend({
-        eventfrog: jQueryEventFrog,
-        eventfrogService: jQueryEventFrogService,
-        efapi: jQueryEventFrogPromise
+        eventfrog: jQueryEventfrog,
+        eventfrogService: jQueryEventfrogService,
+        efapi: jQueryEventfrogPromise
     });
 })(jQuery);
 
-},{"./EventFrog":1,"./service/EventFrogService":7}],7:[function(require,module,exports){
-const EventFrogEvent = require('../entity/EventFrogEvent');
-const EventFrogGroup = require('../entity/EventFrogGroup');
-const EventFrogLocation = require('../entity/EventFrogLocation');
-const EventFrogTopic = require('../entity/EventFrogTopic');
-const EventFrogUtil = require('../util/EventFrogUtil');
+},{"./Eventfrog":1,"./service/EventfrogService":7}],7:[function(require,module,exports){
+const EventfrogEvent = require('../entity/EventfrogEvent');
+const EventfrogGroup = require('../entity/EventfrogGroup');
+const EventfrogLocation = require('../entity/EventfrogLocation');
+const EventfrogTopic = require('../entity/EventfrogTopic');
+const EventfrogUtil = require('../util/EventfrogUtil');
 
 /**
  * @author Julian Pollak <poljpocket@gmail.com>
  */
-class EventFrogService {
+class EventfrogService {
     /**
      * @param {string} apiKey
      */
@@ -564,7 +565,7 @@ class EventFrogService {
 
     /**
      * Loads a list of events with given options
-     * EventFrogGroup and EventFrogLocation matches are searched for afterwards and matched to the events for more detailed display
+     * EventfrogGroup and EventfrogLocation matches are searched for afterwards and matched to the events for more detailed display
      *
      * @see getEvents
      * @see mapLocations
@@ -603,7 +604,7 @@ class EventFrogService {
     /**
      * Maps corresponding locations to events
      *
-     * @param {EventFrogEvent[]} events - the list of events to modify
+     * @param {EventfrogEvent[]} events - the list of events to modify
      */
     async mapLocations(events) {
         const locationIds = new Set(events.map(e => e.locationId));
@@ -617,7 +618,7 @@ class EventFrogService {
     /**
      * Maps corresponding groups to events
      *
-     * @param {EventFrogEvent[]} events - the list of events to modify
+     * @param {EventfrogEvent[]} events - the list of events to modify
      */
     async mapGroups(events) {
         const groupIds = new Set(events.map(e => e.groupId));
@@ -634,7 +635,7 @@ class EventFrogService {
      *
      * @see loadTopics
      *
-     * @param {EventFrogEvent[]} events - the list of events to modify
+     * @param {EventfrogEvent[]} events - the list of events to modify
      */
     async mapTopics(events) {
         const topics = await this.loadTopics();
@@ -670,12 +671,12 @@ class EventFrogService {
      * @param {boolean} [options.stream] - true = nur nach Live-Streamingevents suchen; false = nur nach Events suchen, die kein Live-Streaming haben
      * @param {boolean} [options.withOwnHiddens] - true = Es wird auch in den eigenen versteckten Events gesucht (Erfasser der Events = Besitzer des APIKeys)
      *
-     * @return {Promise<EventFrogEvent[]>}
+     * @return {Promise<EventfrogEvent[]>}
      */
     async getEvents(options) {
         /** @type {{totalNumberOfResources: int, events: Array}} */
-        const eventData = await this._get(EventFrogEvent.apiEdge, options);
-        return eventData.events.map(i => new EventFrogEvent(i));
+        const eventData = await this._get(EventfrogEvent.apiEdge, options);
+        return eventData.events.map(i => new EventfrogEvent(i));
     }
 
     /**
@@ -689,12 +690,12 @@ class EventFrogService {
      * @param {int} [options.perPage] - default 100, gibt an, wieviele Events zurückgegeben werden sollen
      * @param {int} [options.page] - Gibt an welche Seite der Resultate zurückgegeben werden soll (in Zusammenhang mit perPage)
      *
-     * @return {Promise<EventFrogLocation[]>}
+     * @return {Promise<EventfrogLocation[]>}
      */
     async getLocations(options) {
         /** @type {{totalNumberOfResources: int, locations: Array}} */
-        const locationsData = await this._get(EventFrogLocation.apiEdge, options);
-        return locationsData.locations.map(element => new EventFrogLocation(element));
+        const locationsData = await this._get(EventfrogLocation.apiEdge, options);
+        return locationsData.locations.map(element => new EventfrogLocation(element));
     }
 
     /**
@@ -702,7 +703,7 @@ class EventFrogService {
      *
      * @param {string|string[]} [ids] - location-Ids
      *
-     * @return {Promise<EventFrogLocation[]>}
+     * @return {Promise<EventfrogLocation[]>}
      */
     async getLocationsByIds(ids) {
         return this.getLocations({id: ids});
@@ -719,12 +720,12 @@ class EventFrogService {
      * @param {int} [options.perPage] - default 100, gibt an, wieviele Events zurückgegeben werden sollen
      * @param {int} [options.page] - Gibt an welche Seite der Resultate zurückgegeben werden soll (in Zusammenhang mit perPage)
      *
-     * @return {Promise<EventFrogGroup[]>}
+     * @return {Promise<EventfrogGroup[]>}
      */
     async getGroups(options) {
         /** @type {{totalNumberOfResources: int, eventgroups: Array}} */
-        const groupData = await this._get(EventFrogGroup.apiEdge, options);
-        return groupData.eventgroups.map(i => new EventFrogGroup(i));
+        const groupData = await this._get(EventfrogGroup.apiEdge, options);
+        return groupData.eventgroups.map(i => new EventfrogGroup(i));
     }
 
     /**
@@ -732,7 +733,7 @@ class EventFrogService {
      *
      * @param {string[]} ids - list of integers the ID(s) of groups to load
      *
-     * @return {Promise<EventFrogGroup[]>}
+     * @return {Promise<EventfrogGroup[]>}
      */
     async getGroupsByIds(ids) {
         return this.getGroups({groupId: ids});
@@ -740,12 +741,12 @@ class EventFrogService {
 
     /**
      * Loads the list of topics
-     * EventFrogTopic parents are mapped to topics if applicable
+     * EventfrogTopic parents are mapped to topics if applicable
      *
      * @see getTopics
      * @see mapTopicParents
      *
-     * @return {Promise<EventFrogTopic[]>}
+     * @return {Promise<EventfrogTopic[]>}
      */
     async loadTopics() {
         let topics = await this.getTopics();
@@ -754,18 +755,18 @@ class EventFrogService {
     }
 
     /**
-     * @return {Promise<EventFrogTopic[]>}
+     * @return {Promise<EventfrogTopic[]>}
      */
     async getTopics() {
         /** @type {{totalNumberOfResources: int, rubrics: Array}} */
-        const topicData = await this._get(EventFrogTopic.apiEdge, {});
-        return topicData.rubrics.map(i => new EventFrogTopic(i));
+        const topicData = await this._get(EventfrogTopic.apiEdge, {});
+        return topicData.rubrics.map(i => new EventfrogTopic(i));
     }
 
     /**
      * Maps corresponding parent topics to topics
      *
-     * @param {EventFrogTopic[]} topics - the list of topics to modify
+     * @param {EventfrogTopic[]} topics - the list of topics to modify
      */
     mapTopicParents(topics) {
         const topicMap = new Map(topics.map(i => [i.id, i]));
@@ -782,12 +783,12 @@ class EventFrogService {
      * @param {string} edge - the API edge to use
      * @param options - the options to pass in the AJAX query
      *
-     * @return {Promise<Object|string>}
+     * @return {Promise}
      */
     async _get(edge, options) {
-        const params = EventFrogUtil.getSearchParams(options);
+        const params = EventfrogUtil.getSearchParams(options);
         params.append('apiKey', this._key);
-        const url = `${EventFrogService._base}${edge}?${params.toString()}`;
+        const url = `${EventfrogService._base}${edge}?${params.toString()}`;
         const response = await fetch(url, {
             method: 'GET',
         });
@@ -800,15 +801,15 @@ class EventFrogService {
 /**
  * @type {string}
  */
-EventFrogService._base = '//api.eventfrog.net/api/v1';
+EventfrogService._base = '//api.eventfrog.net/api/v1';
 
-module.exports = EventFrogService;
+module.exports = EventfrogService;
 
-},{"../entity/EventFrogEvent":2,"../entity/EventFrogGroup":3,"../entity/EventFrogLocation":4,"../entity/EventFrogTopic":5,"../util/EventFrogUtil":8}],8:[function(require,module,exports){
+},{"../entity/EventfrogEvent":2,"../entity/EventfrogGroup":3,"../entity/EventfrogLocation":4,"../entity/EventfrogTopic":5,"../util/EventfrogUtil":8}],8:[function(require,module,exports){
 /**
  * @author Julian Pollak <poljpocket@gmail.com>
  */
-class EventFrogUtil {
+class EventfrogUtil {
     /**
      * Returns the localized version of a dictionary of locale-value pairs
      * returns the first found locale if preferred is not available
@@ -850,6 +851,6 @@ class EventFrogUtil {
     }
 }
 
-module.exports = EventFrogUtil;
+module.exports = EventfrogUtil;
 
 },{}]},{},[6]);

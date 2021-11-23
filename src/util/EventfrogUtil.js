@@ -1,7 +1,7 @@
 /**
  * @author Julian Pollak <poljpocket@gmail.com>
  */
-class EventFrogUtil {
+class EventfrogUtil {
     /**
      * Returns the localized version of a dictionary of locale-value pairs
      * returns the first found locale if preferred is not available
@@ -43,4 +43,4 @@ class EventFrogUtil {
     }
 }
 
-module.exports = EventFrogUtil;
+module.exports = EventfrogUtil;
