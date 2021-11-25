@@ -1,8 +1,15 @@
-const EventfrogEvent = require('../entity/EventfrogEvent');
-const EventfrogGroup = require('../entity/EventfrogGroup');
-const EventfrogLocation = require('../entity/EventfrogLocation');
-const EventfrogTopic = require('../entity/EventfrogTopic');
+const EventfrogEvent = require('../model/EventfrogEvent');
+const EventfrogGroup = require('../model/EventfrogGroup');
+const EventfrogLocation = require('../model/EventfrogLocation');
+const EventfrogTopic = require('../model/EventfrogTopic');
 const EventfrogUtil = require('../util/EventfrogUtil');
+
+const EventfrogEventResult = require('../result/EventfrogEventResult');
+const EventfrogLocationResult = require("../result/EventfrogLocationResult");
+const EventfrogGroupResult = require("../result/EventfrogGroupResult");
+const EventfrogEventRequest = require("../request/EventfrogEventRequest");
+const EventfrogGroupRequest = require("../request/EventfrogGroupRequest");
+const EventfrogLocationRequest = require("../request/EventfrogLocationRequest");
 
 /**
  * @author Julian Pollak <poljpocket@gmail.com>
@@ -20,52 +27,35 @@ class EventfrogService {
     }
 
     /**
-     * Loads a list of events with given options
+     * Loads a list of events with given request
      * EventfrogGroup and EventfrogLocation matches are searched for afterwards and matched to the events for more detailed display
      *
      * @see getEvents
      * @see mapLocations
      * @see mapGroups
      *
-     * @param options
-     * @param {string} [options.q] - Der Suchbegriff
-     * @param {string|string[]} [options.id] - Event-Id, nur Events mit dieser/n Id/s werden gefunden
-     * @param {boolean} [options.excludeLocs] - Die bei locId angegebenen Locations sollen ausgeschlossen werden
-     * @param {boolean} [options.excludeOrgs] - Die bei orgId angegebenen Organizers sollen ausgeschlossen werden
-     * @param {boolean} [options.excludeRubrics] - Die bei rubId angegebenen Organizers sollen ausgeschlossen werden
-     * @param {boolean} [options.excludeExtSrcIds] - Die bei extSourceId angegebenen externen Source-Ids sollen ausgeschlossen werden
-     * @param {string|string[]} [options.locId] - locationIds
-     * @param {string|string[]} [options.orgId] - organizerIds
-     * @param {int|int[]} [options.rubId] - rubricids
-     * @param {string|string[]} [options.extSrcId] - extSourceIds
-     * @param {string|string[]} [options.zip] - PLZ, nur Events mit dieser/n PLZs werden gefunden
-     * @param {float} [options.lat] - Latitude für Umkreissuche (nur zusammen mit lng und r verwendbar)
-     * @param {float} [options.lng] - Longitude für Umkreissuche (nur zusammen mit lat und r verwendbar)
-     * @param {float} [options.r] - Gibt den Radius in km für die Umkreissuche an. (nur zusammen mit lat und lng verwendbar)
-     * @param {string} [options.from] - dd.MM.YYYY, nur Events die ab diesem Datum stattfinden sollen zurückgegeben werden
-     * @param {string} [options.to] - dd.MM.YYYY, nur Events die bis zu diesem Datum stattfinden sollen zurückgegeben werden
-     * @param {string} [options.modifiedSince] - dd.MM.YYYY[+HH:mm:ss], Es werden nur Events zurückgegeben die ab diesem Datum (MEZ) geändert wurden (angegebenes Datum inklusive).
-     * @param {int} [options.perPage] - default 100, gibt an, wieviele Events zurückgegeben werden sollen
-     * @param {int} [options.page] - Gibt an welche Seite der Resultate zurückgegeben werden soll (in Zusammenhang mit perPage)
-     * @param {boolean} [options.stream] - true = nur nach Live-Streamingevents suchen; false = nur nach Events suchen, die kein Live-Streaming haben
-     * @param {boolean} [options.withOwnHiddens] - true = Es wird auch in den eigenen versteckten Events gesucht (Erfasser der Events = Besitzer des APIKeys)
+     * @param {EventfrogEventRequest} request
+     *
+     * @return {Promise<EventfrogEventResult>}
      */
-    async loadEvents(options) {
-        let events = await this.getEvents(options);
-        await this.mapLocations(events);
-        await this.mapGroups(events);
-        return events;
+    async loadEvents(request) {
+        let eventResult = await this.getEvents(request);
+        await this.mapLocations(eventResult.datasets);
+        await this.mapGroups(eventResult.datasets);
+        return eventResult;
     }
 
     /**
      * Maps corresponding locations to events
      *
      * @param {EventfrogEvent[]} events - the list of events to modify
+     *
+     * TODO load locations in batches if limits are exceeded
      */
     async mapLocations(events) {
         const locationIds = new Set(events.map(e => e.locationId));
-        const locations = await this.getLocations({id: [...locationIds]});
-        const locationMap = new Map(locations.map(i => [i.id, i]));
+        const locations = await this.getLocations(new EventfrogLocationRequest({id: [...locationIds]}));
+        const locationMap = new Map(locations.datasets.map(i => [i.id, i]));
         events.forEach(event => {
             event.location = locationMap.get(event.locationId);
         });
@@ -75,11 +65,13 @@ class EventfrogService {
      * Maps corresponding groups to events
      *
      * @param {EventfrogEvent[]} events - the list of events to modify
+     *
+     * TODO load groups in batches if limits are exceeded
      */
     async mapGroups(events) {
         const groupIds = new Set(events.map(e => e.groupId));
-        const groupData = await this.getGroups({groupId: [...groupIds]});
-        const groupMap = new Map(groupData.map(i => [i.id, i]));
+        const groupResult = await this.getGroups(new EventfrogGroupRequest({groupId: [...groupIds]}));
+        const groupMap = new Map(groupResult.datasets.map(i => [i.id, i]));
         events.forEach(event => {
             event.group = groupMap.get(event.groupId);
         });
@@ -102,75 +94,35 @@ class EventfrogService {
     }
 
     /**
-     * Returns a list of events with given options
+     * Returns a list of events with given request
      *
-     * @param options
-     * @param {string} [options.q] - Der Suchbegriff
-     * @param {string|string[]} [options.id] - Event-Id, nur Events mit dieser/n Id/s werden gefunden
-     * @param {boolean} [options.excludeLocs] - Die bei locId angegebenen Locations sollen ausgeschlossen werden
-     * @param {boolean} [options.excludeOrgs] - Die bei orgId angegebenen Organizers sollen ausgeschlossen werden
-     * @param {boolean} [options.excludeRubrics] - Die bei rubId angegebenen Organizers sollen ausgeschlossen werden
-     * @param {boolean} [options.excludeExtSrcIds] - Die bei extSourceId angegebenen externen Source-Ids sollen ausgeschlossen werden
-     * @param {string|string[]} [options.locId] - locationIds
-     * @param {string|string[]} [options.orgId] - organizerIds
-     * @param {int|int[]} [options.rubId] - rubricids
-     * @param {string|string[]} [options.extSrcId] - extSourceIds
-     * @param {string|string[]} [options.zip] - PLZ, nur Events mit dieser/n PLZs werden gefunden
-     * @param {float} [options.lat] - Latitude für Umkreissuche (nur zusammen mit lng und r verwendbar)
-     * @param {float} [options.lng] - Longitude für Umkreissuche (nur zusammen mit lat und r verwendbar)
-     * @param {float} [options.r] - Gibt den Radius in km für die Umkreissuche an. (nur zusammen mit lat und lng verwendbar)
-     * @param {string} [options.from] - dd.MM.YYYY, nur Events die ab diesem Datum stattfinden sollen zurückgegeben werden
-     * @param {string} [options.to] - dd.MM.YYYY, nur Events die bis zu diesem Datum stattfinden sollen zurückgegeben werden
-     * @param {string} [options.modifiedSince] - dd.MM.YYYY[+HH:mm:ss], Es werden nur Events zurückgegeben die ab diesem Datum (MEZ) geändert wurden (angegebenes Datum inklusive).
-     * @param {int} [options.perPage] - default 100, gibt an, wieviele Events zurückgegeben werden sollen
-     * @param {int} [options.page] - Gibt an welche Seite der Resultate zurückgegeben werden soll (in Zusammenhang mit perPage)
-     * @param {boolean} [options.stream] - true = nur nach Live-Streamingevents suchen; false = nur nach Events suchen, die kein Live-Streaming haben
-     * @param {boolean} [options.withOwnHiddens] - true = Es wird auch in den eigenen versteckten Events gesucht (Erfasser der Events = Besitzer des APIKeys)
+     * @param {EventfrogEventRequest} request
      *
-     * @return {Promise<EventfrogEvent[]>}
+     * @return {Promise<EventfrogEventResult>}
      */
-    async getEvents(options) {
-        /** @type {{totalNumberOfResources: int, events: Array}} */
-        const eventData = await this._get(EventfrogEvent.apiEdge, options);
-        return eventData.events.map(i => new EventfrogEvent(i));
+    async getEvents(request) {
+        const eventData = await this._get(EventfrogEvent.apiEdge, request);
+        return new EventfrogEventResult(request, eventData);
     }
 
     /**
-     * @param options
-     * @param {string|string[]} [options.id] - location-Ids
-     * @param {float} [options.lat] - Latitude für Umkreissuche (nur zusammen mit lng und r verwendbar)
-     * @param {float} [options.lng] - Longitude für Umkreissuche (nur zusammen mit lat und r verwendbar)
-     * @param {float} [options.r] - Gibt den Radius in km für die Umkreissuche an. (nur zusammen mit lat und lng verwendbar)
-     * @param {string|string[]} [options.zip] - PLZ, nur Events mit dieser/n PLZs werden gefunden
-     * @param {string} [options.modifiedSince] - dd.MM.YYYY[+HH:mm:ss], Es werden nur Events zurückgegeben die ab diesem Datum (MEZ) geändert wurden (angegebenes Datum inklusive).
-     * @param {int} [options.perPage] - default 100, gibt an, wieviele Events zurückgegeben werden sollen
-     * @param {int} [options.page] - Gibt an welche Seite der Resultate zurückgegeben werden soll (in Zusammenhang mit perPage)
+     * @param {EventfrogLocationRequest} request
      *
-     * @return {Promise<EventfrogLocation[]>}
+     * @return {Promise<EventfrogLocationResult>}
      */
-    async getLocations(options) {
-        /** @type {{totalNumberOfResources: int, locations: Array}} */
-        const locationsData = await this._get(EventfrogLocation.apiEdge, options);
-        return locationsData.locations.map(element => new EventfrogLocation(element));
+    async getLocations(request) {
+        const locationsData = await this._get(EventfrogLocation.apiEdge, request);
+        return new EventfrogLocationResult(request, locationsData);
     }
 
     /**
-     * @param options
-     * @param {string|string[]} [options.groupId] - eventgroup-Ids
-     * @param {float} [options.lat] - Latitude für Umkreissuche (nur zusammen mit lng und r verwendbar)
-     * @param {float} [options.lng] - Longitude für Umkreissuche (nur zusammen mit lat und r verwendbar)
-     * @param {float} [options.r] - Gibt den Radius in km für die Umkreissuche an. (nur zusammen mit lat und lng verwendbar)
-     * @param {string|string[]} [options.zip] - PLZ, nur Events mit dieser/n PLZs werden gefunden
-     * @param {string} [options.modifiedSince] - dd.MM.YYYY[+HH:mm:ss], Es werden nur Events zurückgegeben die ab diesem Datum (MEZ) geändert wurden (angegebenes Datum inklusive).
-     * @param {int} [options.perPage] - default 100, gibt an, wieviele Events zurückgegeben werden sollen
-     * @param {int} [options.page] - Gibt an welche Seite der Resultate zurückgegeben werden soll (in Zusammenhang mit perPage)
+     * @param {EventfrogGroupRequest} request
      *
-     * @return {Promise<EventfrogGroup[]>}
+     * @return {Promise<EventfrogGroupResult>}
      */
-    async getGroups(options) {
-        /** @type {{totalNumberOfResources: int, eventgroups: Array}} */
-        const groupData = await this._get(EventfrogGroup.apiEdge, options);
-        return groupData.eventgroups.map(i => new EventfrogGroup(i));
+    async getGroups(request) {
+        const groupData = await this._get(EventfrogGroup.apiEdge, request);
+        return new EventfrogGroupResult(request, groupData);
     }
 
     /**
@@ -210,17 +162,17 @@ class EventfrogService {
     }
 
     /**
-     * Performs an API query with given options.
+     * Performs an API query with given request.
      *
      * @private
      *
      * @param {string} edge - the API edge to use
-     * @param options - the options to pass in the AJAX query
+     * @param {EventfrogRequest} request - the request to pass in the AJAX query
      *
      * @return {Promise}
      */
-    async _get(edge, options) {
-        const params = EventfrogUtil.getSearchParams(options);
+    async _get(edge, request) {
+        const params = EventfrogUtil.getSearchParams(request.options);
         params.append('apiKey', this._key);
         const url = `${EventfrogService._base}${edge}?${params.toString()}`;
         const response = await fetch(url, {
