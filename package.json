@@ -2,7 +2,7 @@
   "name": "eventfrog-api",
   "author": "Julian Pollak <poljpocket@gmail.com>",
   "description": "Javascript implementation of the Eventfrog API",
-  "version": "2.0.0-beta.3",
+  "version": "2.0.0-alpha.1",
   "license": "MIT",
   "main": "src/service/EventfrogService.js",
   "dependencies": {
@@ -21,6 +21,6 @@
     "js:jquery": "browserify -t [ browserify-shim ] -o dist/jquery.eventfrog.js src/jQuery.js",
     "js:minify": "uglifyjs -o dist/jquery.eventfrog.min.js dist/jquery.eventfrog.js",
     "build": "npm-run-all js:jquery js:minify",
-    "preversion": "npm run build"
+    "prepare": "npm run build"
   }
 }
