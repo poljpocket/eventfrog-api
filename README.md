@@ -3,7 +3,6 @@
 Basic implementation of the [Eventfrog](https://eventfrog.ch) Events API:
 
 * Load events, filter them by various parameters
-* Filter events by group (see [Limitations](#known-limitations))
 * Location-based search for events as far as the API allows
 * Automatically load location and group endpoints for events
 
@@ -54,7 +53,7 @@ const EventfrogService = require('eventfrog-api');
 Load `10` events from a specific organization using `async/await`:
 
 ```js
-const Service = $.eventfrogService('YOUR_API_KEY');
+const Service = $.EventfrogService('YOUR_API_KEY');
 const events = await Service.loadEvents({
     perPage: 10,
     orgId: 'ORG_ID',
@@ -66,7 +65,7 @@ const events = await Service.loadEvents({
 or using `Promise`s:
 
 ```js
-const Service = $.eventfrogService('YOUR_API_KEY');
+const Service = $.EventfrogService('YOUR_API_KEY');
 Service.loadEvents({
     perPage: 10,
     orgId: 'ORG_ID',

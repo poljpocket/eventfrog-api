@@ -155,17 +155,6 @@ class EventfrogService {
     }
 
     /**
-     * @deprecated v1.2.0
-     *
-     * @param {string|string[]} [ids] - location-Ids
-     *
-     * @return {Promise<EventfrogLocation[]>}
-     */
-    async getLocationsByIds(ids) {
-        return this.getLocations({id: ids});
-    }
-
-    /**
      * @param options
      * @param {string|string[]} [options.groupId] - eventgroup-Ids
      * @param {float} [options.lat] - Latitude für Umkreissuche (nur zusammen mit lng und r verwendbar)
@@ -182,17 +171,6 @@ class EventfrogService {
         /** @type {{totalNumberOfResources: int, eventgroups: Array}} */
         const groupData = await this._get(EventfrogGroup.apiEdge, options);
         return groupData.eventgroups.map(i => new EventfrogGroup(i));
-    }
-
-    /**
-     * @deprecated v1.2.0
-     *
-     * @param {string[]} ids - list of integers the ID(s) of groups to load
-     *
-     * @return {Promise<EventfrogGroup[]>}
-     */
-    async getGroupsByIds(ids) {
-        return this.getGroups({groupId: ids});
     }
 
     /**
