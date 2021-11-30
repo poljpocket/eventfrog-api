@@ -13,4 +13,9 @@ module.exports = class EventfrogRequest {
 
         Object.assign(this.options, {...options});
     }
+
+    nextPage() {
+        this.options.page += 1;
+    }
 }
+

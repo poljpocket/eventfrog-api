@@ -19,8 +19,4 @@ module.exports = class EventfrogLocationRequest extends EventfrogRequest {
     constructor(options) {
         super(options);
     }
-
-    nextPage() {
-        return super.nextPage();
-    }
 }
