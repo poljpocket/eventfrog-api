@@ -8,9 +8,6 @@ Basic implementation of the [Eventfrog](https://eventfrog.ch) Events API:
 
 ### Known limitations
 
-* You cannot filter by group and have pagination at the same time because Eventfrog does not allow filtering by group ID
-  at this time. This filter has to be applied after the events are loaded and thus pagination would be filtered
-  afterwards.
 * You cannot get all locations of an event (multiple are possible by the API). Only the first one is fetched.
 
 ### Known issues
@@ -49,17 +46,17 @@ Load `10` events from a specific organization:
 const Service = $.EventfrogService('YOUR_API_KEY');
 
 const request = $.EventfrogEventRequest({
-    perPage: 10,
-    orgId: 'ORG_ID',
+  perPage: 10,
+  orgId: 'ORG_ID',
 });
 
 let result = null;
 do {
-    result = await Service.loadEvents(request);
-    const events = result.datasets;
-    // do stuff with events
-    request.nextPage();
-} while (result.hasNewPage());
+  result = await Service.loadEvents(request);
+  const events = result.datasets;
+  // do stuff with events
+  request.nextPage();
+} while (result.hasNextPage());
 ```
 
 ### Using commonJS
@@ -83,7 +80,7 @@ do {
     const events = result.datasets;
     // do stuff with events
     request.nextPage();
-} while (result.hasNewPage());
+} while (result.hasNextPage());
 ```
 
 ## ToDo

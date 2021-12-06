@@ -13,7 +13,7 @@ module.exports = class EventfrogResult {
         this.request = null;
     }
 
-    hasNewPage() {
-        return this.totalAmount > this.request.options.perPage * this.request.options.page;
+    hasNextPage() {
+        return this.request.hasNextPage(this.totalAmount);
     }
 }

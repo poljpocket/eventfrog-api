@@ -14,8 +14,20 @@ module.exports = class EventfrogRequest {
         Object.assign(this.options, {...options});
     }
 
+    /**
+     * Update request to return the next page when passing to a Service again.
+     */
     nextPage() {
         this.options.page += 1;
     }
-}
 
+    /**
+     * Decides if next page is available based on a given total amount.
+     *
+     * @param {int} totalAmount
+     * @return {boolean}
+     */
+    hasNextPage(totalAmount) {
+        return totalAmount > this.options.perPage * this.options.page;
+    }
+}
