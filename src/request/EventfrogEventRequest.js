@@ -11,6 +11,7 @@ const EventfrogRequest = require('./EventfrogRequest');
  * @property {string|string[]} [locId] - locationIds
  * @property {string|string[]} [orgId] - organizerIds
  * @property {int|int[]} [rubId] - rubricids
+ * @property {string|string[]} [groupId] - event group id(s)
  * @property {string|string[]} [extSrcId] - extSourceIds
  * @property {string|string[]} [zip] - PLZ, nur Events mit dieser/n PLZs werden gefunden
  * @property {number} [lat] - Latitude für Umkreissuche (nur zusammen mit lng und r verwendbar)
