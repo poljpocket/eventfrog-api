@@ -5,10 +5,8 @@
   "version": "2.0.0-alpha.1",
   "license": "MIT",
   "main": "src/service/EventfrogService.js",
-  "dependencies": {
-    "jquery": "^3"
-  },
   "devDependencies": {
+    "jquery": "^3",
     "browserify": "^17",
     "browserify-shim": "^3",
     "npm-run-all": "^4",
