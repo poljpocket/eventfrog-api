@@ -29,7 +29,7 @@ npm i eventfrog-api
 
 > See [eventfrog-api-example](https://github.com/poljpocket/eventfrog-api-example) for an example implementation.
 
-### Load the library
+### Using jQuery
 
 Load the bundled `jQuery` plugin:
 
@@ -37,8 +37,6 @@ Load the bundled `jQuery` plugin:
 
 <script src="dist/jquery.eventfrog.min.js"></script>
 ```
-
-### Load some events
 
 Load `10` events from a specific organization:
 
