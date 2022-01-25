@@ -58,7 +58,7 @@ module.exports = async function (customOptions) {
 
     let events = await eventFrogLoader.loadEvents(queryArgs);
     if (options.perPage === 0 && options.amount > 0) {
-        events = events.filter(event => options.group.length ? event.group.id === options.group : true);
+        events = events.filter(event => options.group.length ? event.group && (event.group.id === options.group) : true);
         events = events.slice(0, options.amount);
     }
 
