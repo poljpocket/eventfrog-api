@@ -2,7 +2,7 @@
   "name": "eventfrog-api",
   "author": "Julian Pollak <poljpocket@gmail.com>",
   "description": "Javascript implementation of the Eventfrog API",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "license": "MIT",
   "main": "src/service/EventfrogService.js",
   "devDependencies": {
