@@ -1,13 +1,11 @@
-module.exports = class EventfrogRequest {
-    constructor(options) {
-        /**
-         * @type {Object}
-         */
-        this.options = {
-            /** @type {int} - Gibt an welche Seite der Resultate zurückgegeben werden soll (in Zusammenhang mit perPage) */
-            page: 1,
+import {EventfrogApiRequest} from "../api";
 
-            /** @type {int} - default 100, gibt an, wieviele Events zurückgegeben werden sollen */
+export class EventfrogRequest<T extends EventfrogApiRequest.Request> {
+    public options: EventfrogApiRequest.Request;
+
+    constructor(options: T) {
+        this.options = {
+            page: 1,
             perPage: 100,
         };
 
@@ -31,3 +29,7 @@ module.exports = class EventfrogRequest {
         return totalAmount > this.options.perPage * this.options.page;
     }
 }
+
+export class EventfrogEventRequest extends EventfrogRequest<EventfrogApiRequest.Events> {}
+export class EventfrogLocationRequest extends EventfrogRequest<EventfrogApiRequest.Locations> {}
+export class EventfrogGroupRequest extends EventfrogRequest<EventfrogApiRequest.Groups> {}

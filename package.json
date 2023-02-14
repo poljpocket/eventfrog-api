@@ -6,19 +6,18 @@
   "license": "MIT",
   "main": "src/service/EventfrogService.js",
   "devDependencies": {
-    "jquery": "^3",
-    "browserify": "^17",
-    "browserify-shim": "^3",
-    "npm-run-all": "^4",
-    "uglify-js": "^3"
+    "@types/node": "^16",
+    "browserify": "^17.0.0",
+    "browserify-shim": "^3.8.16",
+    "jquery": "^3.6.3",
+    "npm-run-all": "^4.1.5",
+    "uglify-js": "^3.17.4",
+    "typescript": "latest"
   },
   "browserify-shim": {
     "jquery": "global:jQuery"
   },
   "scripts": {
-    "js:jquery": "browserify -t [ browserify-shim ] -o dist/jquery.eventfrog.js src/jQuery.js",
-    "js:minify": "uglifyjs -o dist/jquery.eventfrog.min.js dist/jquery.eventfrog.js",
-    "build": "npm-run-all js:jquery js:minify",
-    "prepare": "npm run build"
+    "build": "tsc"
   }
 }
