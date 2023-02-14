@@ -4,7 +4,7 @@ import {
     EventfrogLocationRequest,
     EventfrogRequest
 } from "../request/EventfrogRequest";
-import {EventfrogApiModel, EventfrogApiResult} from "../api";
+import {EventfrogApiModel, EventfrogApiResult} from "../../types/api";
 import {EventfrogEvent} from "../model/EventfrogEvent";
 import {EventfrogUtil} from "../util/EventfrogUtil";
 import {EventfrogTopic} from "../model/EventfrogTopic";

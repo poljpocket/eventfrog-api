@@ -18,6 +18,8 @@
     "jquery": "global:jQuery"
   },
   "scripts": {
-    "build": "tsc"
+    "build": "tsc",
+    "declare": "tsc --declaration --declarationDir ./types",
+    "clean": "tsc --build --clean"
   }
 }

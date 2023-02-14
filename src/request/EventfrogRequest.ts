@@ -1,4 +1,4 @@
-import {EventfrogApiRequest} from "../api";
+import {EventfrogApiRequest} from "../../types/api";
 
 export class EventfrogRequest<T extends EventfrogApiRequest.Request> {
     public options: EventfrogApiRequest.Request;

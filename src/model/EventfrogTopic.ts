@@ -2,7 +2,7 @@
  * @author Julian Pollak <poljpocket@gmail.com>
  */
 import {EventfrogModel} from "./EventfrogModel";
-import {EventfrogApiModel} from "../api";
+import {EventfrogApiModel} from "../../types/api";
 
 export class EventfrogTopic implements EventfrogModel {
     static apiEdge: string = '/rubrics.json';

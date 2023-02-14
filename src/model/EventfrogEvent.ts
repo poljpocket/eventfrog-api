@@ -1,4 +1,4 @@
-import {EventfrogApiModel} from "../api";
+import {EventfrogApiModel} from "../../types/api";
 import {EventfrogUtil} from "../util/EventfrogUtil";
 import {EventfrogLocation} from "./EventfrogLocation";
 import {EventfrogGroup} from "./EventfrogGroup";
