@@ -29,41 +29,12 @@ npm i eventfrog-api
 
 > See [eventfrog-api-example](https://github.com/poljpocket/eventfrog-api-example) for an example implementation.
 
-### Using jQuery
-
-Load the bundled `jQuery` plugin:
-
-```html
-
-<script src="dist/jquery.eventfrog.min.js"></script>
-```
+### Using es6 module
 
 Load `10` events from a specific organization:
 
 ```js
-const Service = $.EventfrogService('YOUR_API_KEY');
-
-const request = $.EventfrogEventRequest({
-  perPage: 10,
-  orgId: 'ORG_ID',
-});
-
-let result = null;
-do {
-  result = await Service.loadEvents(request);
-  const events = result.datasets;
-  // do stuff with events
-  request.nextPage();
-} while (result.hasNextPage());
-```
-
-### Using commonJS
-
-Load `10` events from a specific organization:
-
-```js
-const EventfrogService = require('eventfrog-api/service/EventfrogService');
-const EventfrogEventRequest = require('eventfrog-api/request/EventfrogEventRequest');
+import {EventfrogService, EventfrogEventRequest} from 'eventfrog-api';
 
 const Service = new EventfrogService('YOUR_API_KEY');
 
