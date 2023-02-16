@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "module": "CommonJS",
+    "module": "ES6",
     "target": "ES2019",
     "sourceMap": true,
     "esModuleInterop": true

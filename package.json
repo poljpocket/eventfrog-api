@@ -4,7 +4,7 @@
   "description": "Javascript implementation of the Eventfrog API",
   "version": "2.1.1",
   "license": "MIT",
-  "main": "src/service/EventfrogService.js",
+  "main": "src/index.js",
   "devDependencies": {
     "@types/node": "^16",
     "browserify": "^17.0.0",
