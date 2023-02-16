@@ -4,6 +4,3 @@ node_modules
 
 *.js
 *.js.map
-
-/types
-!/types/api.d.ts
