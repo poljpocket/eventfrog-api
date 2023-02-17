@@ -9,9 +9,6 @@
     "@types/node": "^16",
     "typescript": "latest"
   },
-  "browserify-shim": {
-    "jquery": "global:jQuery"
-  },
   "scripts": {
     "build": "tsc",
     "clean": "tsc --build --clean"
