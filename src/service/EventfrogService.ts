@@ -36,7 +36,7 @@ export class EventfrogService {
      * @see mapLocations
      * @see mapGroups
      */
-    async loadEvents(request: EventfrogRequest<EventfrogApiModel.Event>): Promise<EventfrogEvent[]> {
+    async loadEvents(request: EventfrogEventRequest): Promise<EventfrogEvent[]> {
         let eventResult = await this.getEvents(request);
         await this.mapLocations(eventResult.datasets);
         await this.mapGroups(eventResult.datasets);
